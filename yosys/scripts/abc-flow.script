@@ -1,0 +1,6 @@
+read_blif {input}
+{LOAD_LIBERTY}
+source abc-opt2.script
+write_blif abc.blif
+write_genlib abc.genlib
+quit

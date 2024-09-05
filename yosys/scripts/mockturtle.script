@@ -1,0 +1,6 @@
+read_genlib abc.genlib
+read --klut --ntk-name netlist abc.blif
+convert_klut
+emap
+write output.v
+quit

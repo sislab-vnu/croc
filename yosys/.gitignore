@@ -1,4 +1,4 @@
-reports
-out
-WORK
+reports*
+out*
+WORK*
 *.log

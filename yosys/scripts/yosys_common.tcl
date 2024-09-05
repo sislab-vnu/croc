@@ -57,15 +57,20 @@ proc envVarValid {var_name} {
 }
 
 proc processAbcScript {abc_script} {
-    global work_dir period_ps
+    global work_dir lib_list
     set src_dir [file join [file dirname [info script]] ../src]
     set abc_out_path $work_dir/[file tail $abc_script]
 
     set raw [read -nonewline [open $abc_script r]]
-    set abc_script_delay [string map -nocase [list "{D}" [subst "-D $period_ps"]] $raw]
-    set abc_script_recaig [string map -nocase [list "{REC_AIG}" [subst "$src_dir/rec6Lib_final_filtered3_recanon_basilisk.aig"]] $abc_script_delay]
+
+    set load_liberty_cmd ""
+    foreach lib $lib_list {
+        append load_liberty_cmd "read_lib -w -S 20 -G 3 $lib\n"
+    }
+    set processed [string map -nocase [list "{LOAD_LIBERTY}" [subst $load_liberty_cmd]] $raw]
+    set processed [string map -nocase [list "{REC_AIG}" [subst "$src_dir/rec6Lib_final_filtered3_recanon_basilisk.aig"]] $processed]
     set abc_out [open $abc_out_path w]
-    puts -nonewline $abc_out $abc_script_recaig
+    puts -nonewline $abc_out $processed
 
     flush $abc_out
     close $abc_out

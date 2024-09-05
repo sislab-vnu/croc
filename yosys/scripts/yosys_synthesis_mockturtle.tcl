@@ -12,10 +12,17 @@ source [file join [file dirname [info script]] yosys_common.tcl]
 set abc_constr [file join [file dirname [info script]] ../src/abc.constr]
 
 # ABC script without DFF optimizations
-set abc_combinational_script [file join [file dirname [info script]] abc-opt.script]
+set abc_opt_script_raw [file join [file dirname [info script]] abc-opt2.script]
+
+set abc_turtle_script_raw [file join [file dirname [info script]] abc_mockturtle.tcl]
+set abc_flow_script_raw [file join [file dirname [info script]] abc-flow.script]
+set mockturtle_script_raw [file join [file dirname [info script]] mockturtle.script]
 
 # process abc file (written to WORK directory)
-set abc_comb_script   [processAbcScript $abc_combinational_script]
+set abc_comb_script   [processAbcScript $abc_opt_script_raw]
+set abc_flow_script   [processAbcScript $abc_flow_script_raw]
+set mockturtle_script [processAbcScript $mockturtle_script_raw]
+set abc_turtle_script [processAbcScript $abc_turtle_script_raw]
 
 # read library files
 foreach file $lib_list {
@@ -68,7 +75,7 @@ yosys opt -noff
 yosys fsm
 yosys opt
 yosys tee -q -o "${report_dir}/${proj_name}_initial_opt.rpt" stat
-yosys wreduce 
+yosys wreduce
 yosys peepopt
 yosys opt_clean
 yosys opt -full
@@ -132,7 +139,16 @@ yosys tee -q -o "${report_dir}/${proj_name}_pre_tech.json" stat -json -tech cmos
 
 puts "Using combinational-only abc optimizations"
 yosys dfflibmap -liberty "$tech_cells"
-yosys abc -liberty "$tech_cells" -D $period_ps -script $abc_comb_script -constr $abc_constr -customflow -showtmp
+yosys scratchpad -set "abc.exe" "/bin/sh"
+yosys scratchpad -set "abc.exeflags" ""
+yosys scratchpad -set "abc.output" "output.v"
+
+yosys abc -liberty "$tech_cells" -D $period_ps \
+          -customflow -script $abc_turtle_script \
+          -helper $abc_flow_script \
+          -helper $abc_comb_script \
+          -helper $mockturtle_script
+#          -showtmp -nocleanup
 
 yosys clean -purge
 

@@ -8,8 +8,6 @@
 # Optimization script utilizing 'Lazy Mans Synthesis'
 # Requires the library of 6-input records (src/rec6Lib...)
 # https://people.eecs.berkeley.edu/~alanmi/publications/2012/iccad12_lms.pdf
-read_blif {tmpdir}/{input}
-{LOAD_LIBERTY}
 
 print_stats
 
@@ -56,6 +54,5 @@ echo "Opt+mapping Iterations..."
 &opt_iter; &map_iter;
 &put
 
-topo
 
-write_blif {tmpdir}/output.blif
+strash
