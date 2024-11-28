@@ -417,16 +417,16 @@ module tb_croc_soc #(
             if (bite == "\n" || uart_read_buf.size() > 80) begin
                  if (uart_read_buf.size() > 0) begin
                     automatic string uart_str = "";
-                    $write("@%t | [UART] as hex: ( ", $time);
+                    $write("@%t | [UARTa] as hex: ( ", $time);
                     foreach (uart_read_buf[i]) begin
                         $write("%02x ", uart_read_buf[i]);
                         uart_str = {uart_str, $sformatf("%c", uart_read_buf[i])};
                     end
                     
-                    $display(")\n@%t | [UART] %s", $time, uart_str);
+                    $display(")\n@%t | [UARTa] %s", $time, uart_str);
   
                 end else begin
-                    $display("@%t | [UART] ???", $time);
+                    $display("@%t | [UARTa] ???", $time);
                 end
 
                 uart_read_buf.delete();

@@ -193,6 +193,7 @@ module uart_rx #()
     //--------------------------------------------------------------------------------------------
     // Defaults
     //--------------------------------------------------------------------------------------------
+    break_interrupt = 1'b0;
 
     //--FIFO Combinational------------------------------------------------------------------------
     fifo_clear    = 1'b1; // Reset
@@ -203,7 +204,9 @@ module uart_rx #()
     fifo_push     = 1'b0; // Write
     fifo_data_i   = '0;   // Write
     
-    timeout       = 1'b0; // Timeout
+    timeout_count_d = timeout_count_q;
+    timeout         = 1'b0; // Timeout
+    timeout_trigger = '0;
     
     fifo_error_index_d = fifo_error_index_q; // FIFO Error
 
@@ -504,8 +507,6 @@ module uart_rx #()
       // timeout_trigger = (1 Startbit + 8 Databits + 1 Paritybit + 2 Stopbits) * 4
       timeout_trigger = 6'b000001 + 6'b001000 + 6'b000001 + 6'b000010; // Timeout Trigger Level
       timeout_trigger = timeout_trigger << 2; // Multiply by 4
-
-      timeout_count_d = timeout_count_q;
 
       if (reg_read.fcr.strct.fifo_en & (~fifo_empty)) begin
         if (write_init | reg_read.obi_read_rhr) begin

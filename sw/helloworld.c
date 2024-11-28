@@ -44,10 +44,10 @@ int main() {
   uart_init();
 
   //-----Send a greeting message---------------------------------------------
-  printf("Hello! %x\n", 123);
+  //printf("Hello! %x\n", 123);
 
   //-----Write-UART-Test-----------------------------------------------------
-  /*uart_write_flush(); // Ensure all bytes are transmitted
+  uart_write_flush(); // Ensure all bytes are transmitted
 
   uart_write(0x41);
   uart_write(0x42);
@@ -55,7 +55,7 @@ int main() {
   uart_write(0x44);
   uart_write(10);
   uart_write(13);
-*/
+
   uart_write_flush();
   /*
   char string [] = "TTM\n\r\0";
