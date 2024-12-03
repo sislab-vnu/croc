@@ -38,7 +38,7 @@ module uart_rx #()
 
   //--Majority-Filter-Signals---------------------------------------------------------------------
   logic [1:0] high_count_q, high_count_d;
-  logic filtered_rxd;
+  logic filtered_rxd_q, filtered_rxd_d;
 
   //--FIFO-signals--------------------------------------------------------------------------------
   logic fifo_clear;
@@ -90,7 +90,7 @@ module uart_rx #()
   //----------------------------------------------------------------------------------------------
 
   //--Clear-Counter-------------------------------------------------------------------------------
-  assign timing_clear = (timing_count == 5'b01111) | (timing_init_clear) ? 1'b1 : 1'b0;
+  assign timing_clear = ((timing_count == 5'b01111) && oversample_rate_edge) | (timing_init_clear) ? 1'b1 : 1'b0;
 
   counter #(
     .WIDTH          (5), 
@@ -141,23 +141,26 @@ module uart_rx #()
   always_comb begin
 
     high_count_d = high_count_q;
+    filtered_rxd_d = filtered_rxd_q;
 
-    filtered_rxd = 1'b0;
-    if (timing_count == 5'b00101) begin // Start reset in cycle 5: "Majority Init"
+    if (timing_count == 5'b00100) begin // Start reset in cycle 5: "Majority Init"
       high_count_d = 2'b00;
     end else if (oversample_rate_edge) begin
-      if (sync_rxd & (timing_count <= 5'b01000)) begin // Take samples in Cycle 6, 7, 8
+      if (sync_rxd & (timing_count < 5'b00111)) begin // Take samples in Cycle 6, 7, 8
         high_count_d = high_count_q + 1;
-      end else if (timing_count == 5'b00000) begin // filtered_rxd is set for Oversample Cycle 8
-        if ((high_count_d == 2'b10) | (high_count_d == 2'b11) ) begin
-          filtered_rxd = 1'b1;
-        end
+      end else if (timing_count == 5'b00111) begin // filtered_rxd is set for Oversample Cycle 8
+        if ((high_count_q == 2'b10) | (high_count_q == 2'b11) ) begin
+          filtered_rxd_d = 1'b1;
+        end else begin
+          filtered_rxd_d = 1'b0;
+        end 
       end
     end
 
   end
 
   `FF(high_count_q, high_count_d, '0, clk_i, rst_ni) 
+  `FF(filtered_rxd_q, filtered_rxd_d, 1'b1, clk_i, rst_ni)
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // FIFO Instantiation//
@@ -270,7 +273,7 @@ module uart_rx #()
       reg_write.lsr_par_err      = 1'b0;
       reg_write.lsr_frame_err    = 1'b0;
       reg_write.lsr_break_intrpt = 1'b0;
-      reg_write.lsr_valid[4:1]   = 1'b1;
+      reg_write.lsr_valid[4:1]   = 4'b1111;
       if (fifo_error_index_q == 4'b0000) begin
         reg_write.lsr_fifo_err  = 1'b0;
         reg_write.lsr_valid[5]  = 1'b1;
@@ -287,7 +290,7 @@ module uart_rx #()
     // After rsr_finish, rsr_q is stored until the next time we are in START state
     if (state_q == RXDATA) begin
       if (timing_bit_center_edge & (bitcount_q <= word_len_bits)) begin 
-        rsr_d[bitcount_q] = filtered_rxd; 
+        rsr_d[bitcount_q] = filtered_rxd_q; 
         bitcount_d        = bitcount_q + 1;
         if (bitcount_q == word_len_bits) begin 
           rsr_finish = 1'b1;
@@ -304,13 +307,13 @@ module uart_rx #()
 
       if (timing_bit_center_edge) begin
         case (reg_read.lcr.arr[5:4]) // Read Parity Configuration 
-          3'b00: parity_err_d = (data_parity == filtered_rxd); // Odd Parity
-          3'b01: parity_err_d = (data_parity != filtered_rxd); // Even Parity
-          3'b10: parity_err_d = (~filtered_rxd);               // Forced 1
-          3'b11: parity_err_d = filtered_rxd;                  // Forced 0
+          3'b00: parity_err_d = (data_parity == filtered_rxd_q); // Odd Parity
+          3'b01: parity_err_d = (data_parity != filtered_rxd_q); // Even Parity
+          3'b10: parity_err_d = (~filtered_rxd_q);               // Forced 1
+          3'b11: parity_err_d = filtered_rxd_q;                  // Forced 0
           default: parity_err_d = 1'b0;
         endcase
-        break_d    = break_q | filtered_rxd;
+        break_d    = break_q | filtered_rxd_q;
         par_finish = 1'b1;
       end
     end
@@ -321,10 +324,10 @@ module uart_rx #()
     if (state_q == RXSTOP) begin
       framing_err_d = 1'b0;
       if (timing_bit_center_edge) begin
-        break_d     = break_q | filtered_rxd;
+        break_d     = break_q | filtered_rxd_q;
         write_init  = 1'b1;
         stop_finish = 1'b1;
-        if (!filtered_rxd) begin
+        if (!filtered_rxd_q) begin
           framing_err_d = 1'b1;
         end else begin
           framing_err_d = 1'b0;
@@ -350,7 +353,7 @@ module uart_rx #()
 
       RXSTART: begin
         if (timing_bit_center_edge) begin 
-          if (~filtered_rxd) begin
+          if (~filtered_rxd_q) begin
             bitcount_d = 3'b000;
             rsr_d      = '0;
             state_d = RXDATA;
@@ -420,7 +423,7 @@ module uart_rx #()
         reg_write.lsr_break_intrpt = fifo_data_o[8];
         reg_write.lsr_frame_err    = fifo_data_o[9];
         reg_write.lsr_par_err      = fifo_data_o[10];
-        reg_write.lsr_valid[4:2]   = 1'b1;
+        reg_write.lsr_valid[4:2]   = 3'b111;
         fifo_pop                   = 1'b1;
 
         if (4'b0000 != fifo_error_index_q) begin
@@ -442,11 +445,11 @@ module uart_rx #()
         rhr_full_d                       = 1'b1;
 
         reg_write.lsr_data_ready         = 1'b1; // Set Data Ready Bit
-        break_interrupt                  = & (~{break_q, rsr_q}); // All character bits 0 ?
         reg_write.lsr_par_err            = parity_err_q;
         reg_write.lsr_frame_err          = framing_err_q;
+        break_interrupt                  = & (~{break_q, rsr_q}); // All character bits 0 ?
         reg_write.lsr_break_intrpt       = break_interrupt;
-        reg_write.lsr_valid[4:2]         = 1'b1;
+        reg_write.lsr_valid[4:2]         = 3'b111;
       end 
 
     end
@@ -539,7 +542,7 @@ module uart_rx #()
   `FF(rhr_full_q, rhr_full_d, '0, clk_i, rst_ni)
 
   //--Break-Interrupt-----------------------------------------------------------------------------
-  `FF(break_q, break_d, '0, clk_i, rst_ni)
+  `FF(break_q, break_d, '1, clk_i, rst_ni)
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // Statemachine Sequential//
