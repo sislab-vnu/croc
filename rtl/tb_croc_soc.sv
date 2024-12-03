@@ -510,7 +510,7 @@ module tb_croc_soc #(
         $dumpvars(1,i_croc_soc);
         `endif
 
-        uart2_rxd_i  = 1'b0;
+        uart2_rxd_i  = 1'b1;
         fetch_en_i = 1'b0;
         
         // wait for reset

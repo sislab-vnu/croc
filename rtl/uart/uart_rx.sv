@@ -56,7 +56,7 @@ module uart_rx #()
   logic [3:0] tl_characters; 
   // FIFO Timeout
   logic [5:0] timeout_trigger; 
-  logic timeout_count_q, timeout_count_d;
+  logic [5:0] timeout_count_q, timeout_count_d;
 
   //--Write-Read-FIFO-or-Write-RHR----------------------------------------------------------------
   logic rhr_full_q, rhr_full_d;
@@ -141,13 +141,14 @@ module uart_rx #()
   always_comb begin
 
     high_count_d = high_count_q;
+
     filtered_rxd = 1'b0;
     if (timing_count == 5'b00101) begin // Start reset in cycle 5: "Majority Init"
       high_count_d = 2'b00;
     end else if (oversample_rate_edge) begin
       if (sync_rxd & (timing_count <= 5'b01000)) begin // Take samples in Cycle 6, 7, 8
         high_count_d = high_count_q + 1;
-      end else if (timing_count == 5'b01000) begin // filtered_rxd is set for Oversample Cycle 8
+      end else if (timing_count == 5'b00000) begin // filtered_rxd is set for Oversample Cycle 8
         if ((high_count_d == 2'b10) | (high_count_d == 2'b11) ) begin
           filtered_rxd = 1'b1;
         end
@@ -226,13 +227,19 @@ module uart_rx #()
     reg_write.lsr_break_intrpt  = 1'b0;
 
     //--Statemachine Combinational----------------------------------------------------------------
-    state_d     = state_q; // Pass along state
-    break_d     = break_q; // Break Interrupt information for Parity and Stop Bits  
+    state_d       = state_q; // Pass along state
+    rsr_d         = rsr_q;
+    bitcount_d    = bitcount_q;  
+    parity_err_d  = parity_err_q;
+    framing_err_d = framing_err_q;
+    break_d       = break_q; // Break Interrupt information for Parity and Stop Bits
 
     rsr_finish  = 1'b0;
     par_finish  = 1'b0;
     stop_finish = 1'b0;   
     write_init  = 1'b0;
+
+    data_parity = 1'b0;
 
     timing_init_clear = 1'b0;
     timing_load       = 1'b0;
@@ -278,9 +285,6 @@ module uart_rx #()
     // RSR - Receiver Shift Register (serial to parallel)
     //--------------------------------------------------------------------------------------------
     // After rsr_finish, rsr_q is stored until the next time we are in START state
-    rsr_d      = rsr_q;
-    bitcount_d = bitcount_q;
-
     if (state_q == RXDATA) begin
       if (timing_bit_center_edge & (bitcount_q <= word_len_bits)) begin 
         rsr_d[bitcount_q] = filtered_rxd; 
@@ -294,8 +298,6 @@ module uart_rx #()
     //--------------------------------------------------------------------------------------------
     // Parity Check
     //--------------------------------------------------------------------------------------------
-    parity_err_d = parity_err_q;
-    
     if (state_q == RXPAR) begin
       parity_err_d = 1'b0;
       data_parity  = ^rsr_q; // XOR to compute parity of data bits
@@ -316,8 +318,6 @@ module uart_rx #()
     //--------------------------------------------------------------------------------------------
     // Stop Bit Check 
     //--------------------------------------------------------------------------------------------
-    framing_err_d = framing_err_q;
-    
     if (state_q == RXSTOP) begin
       framing_err_d = 1'b0;
       if (timing_bit_center_edge) begin
@@ -434,7 +434,6 @@ module uart_rx #()
       //--Write-RSR-to-RHR------------------------------------------------------------------------
       if (write_init) begin
         if (rhr_full_q) begin
-          reg_write.lsr_data_ready  = 1'b1; // Set Data Ready Bit
           reg_write.lsr_overrun_err = 1'b1;
           reg_write.lsr_valid[1]    = 1'b1;
         end 
@@ -442,6 +441,7 @@ module uart_rx #()
         reg_write.rhr_valid              = 1'b1;
         rhr_full_d                       = 1'b1;
 
+        reg_write.lsr_data_ready         = 1'b1; // Set Data Ready Bit
         break_interrupt                  = & (~{break_q, rsr_q}); // All character bits 0 ?
         reg_write.lsr_par_err            = parity_err_q;
         reg_write.lsr_frame_err          = framing_err_q;

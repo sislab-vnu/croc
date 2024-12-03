@@ -29,6 +29,8 @@ int main() {
 
 #include "uart.h"
 #include "print.h"
+#include "util.h"
+#include "config.h"
 
 
 /*
@@ -42,6 +44,7 @@ int main() {
   // Initialize the UART
   
   uart_init();
+  *reg8(UART_BASE_ADDR, UART_INTR_ENABLE_REG_OFFSET) = 0x0F;
 
   //-----Send a greeting message---------------------------------------------
   //printf("Hello! %x\n", 123);

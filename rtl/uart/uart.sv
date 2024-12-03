@@ -70,8 +70,8 @@ module uart #(
     reg_write.fcr_tx_fifo_rst = tx_reg_write.fcr_tx_fifo_rst;
     reg_write.lsr.arr         = { rx_reg_write.lsr_fifo_err, tx_reg_write.lsr_tx_empty , 
                                   tx_reg_write.lsr_thr_empty, rx_reg_write.lsr_break_intrpt, 
-                                  rx_reg_write.lsr_frame_err , rx_reg_write.lsr_par_err,
-                                  rx_reg_write.lsr_overrun_err , rx_reg_write.lsr_data_ready };
+                                  rx_reg_write.lsr_frame_err, rx_reg_write.lsr_par_err,
+                                  rx_reg_write.lsr_overrun_err, rx_reg_write.lsr_data_ready };
     reg_write.msr             = modem_reg_write.msr;
 
     reg_write.fcr_rx_valid    = rx_reg_write.fcr_rx_valid;

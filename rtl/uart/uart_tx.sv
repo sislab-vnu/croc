@@ -304,7 +304,7 @@ module uart_tx #()
   `FF(tsr_q, tsr_d, '0, clk_i, rst_ni)
   `FF(tsr_count_q, tsr_count_d, '0, clk_i, rst_ni)
 
-  `FF(txd_q, txd_d, '0, clk_i, rst_ni)
+  `FF(txd_q, txd_d, '1, clk_i, rst_ni)
 
   `FF(state_q, state_d, TXIDLE, clk_i, rst_ni)
 
