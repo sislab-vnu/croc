@@ -50,7 +50,7 @@ int main() {
   //printf("Hello! %x\n", 123);
 
   //-----Write-UART-Test-----------------------------------------------------
-  uart_write_flush(); // Ensure all bytes are transmitted
+  /*uart_write_flush(); // Ensure all bytes are transmitted
 
   uart_write(0x41);
   uart_write(0x42);
@@ -58,8 +58,15 @@ int main() {
   uart_write(0x44);
   uart_write(10);
   uart_write(13);
-
+  uart_write_flush();*/
+  char received_char;
+  char echo_char;
+  received_char = getchar();
+  echo_char     = received_char + 1;
   uart_write_flush();
+    //putchar(echo_char);
+  uart_write(0x41);
+  
   /*
   char string [] = "TTM\n\r\0";
   // Make an array of 8 arrays

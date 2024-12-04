@@ -381,7 +381,7 @@ module uart_rx #()
 
       RXSTOP: begin
         if (stop_finish) begin
-          if (framing_err_d) begin
+          if (framing_err_q) begin //TODO _d ?
             state_d = RXRESYNCHRONIZE;
           end else begin
             state_d = RXIDLE;

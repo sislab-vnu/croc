@@ -574,6 +574,13 @@ module tb_croc_soc #(
         fetch_en_i = 1'b1;
         jtag_write_reg32(FetchEnAddr, 32'h01);
 
+        uart_write_byte(8'b01000001);
+        /*uart_write_byte(8'b01000010);
+        uart_write_byte(8'b01000011);
+        uart_write_byte(8'b01000100);
+        uart_write_byte(8'b00001010);
+        uart_write_byte(8'b00001101);*/
+
         // wait for non-zero return value (written into core status register)
         jtag_wait_for_eoc(tb_data);
 

@@ -15,13 +15,13 @@ void uart_init() {
     const uint16_t divisor = UART_DIVISOR(UART_FREQ, UART_BAUD); // Calculate from provided config
     uint8_t dlo = (uint8_t)(divisor);
     uint8_t dhi = (uint8_t)(divisor >> 8);
-    *reg8(UART_BASE_ADDR, UART_MODEM_CONTROL_REG_OFFSET) = 0x10;//0x20; // Autoflow mode
+    *reg8(UART_BASE_ADDR, UART_MODEM_CONTROL_REG_OFFSET) = 0x20; // Autoflow mode HANNAH: 0x10; / Loopbackmode
     *reg8(UART_BASE_ADDR, UART_INTR_ENABLE_REG_OFFSET) = 0x00;   // Disable all interrupts
     *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x80;  // Enable DLAB (set baud rate divisor)
     *reg8(UART_BASE_ADDR, UART_DLAB_LSB_REG_OFFSET) = dlo;       // divisor (lo byte)
     *reg8(UART_BASE_ADDR, UART_DLAB_MSB_REG_OFFSET) = dhi;       // divisor (hi byte)
-    *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x03;  // 8 bits, no parity, one stop bit
-    *reg8(UART_BASE_ADDR, UART_FIFO_CONTROL_REG_OFFSET) = 0x47;// 0xC7;  // Enable & clear FIFO, 14B threshold
+    *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x03; // even parity, parity enabled, two stop bits , 8 bit character//0x03;  // 8 bits, no parity, one stop bit
+    *reg8(UART_BASE_ADDR, UART_FIFO_CONTROL_REG_OFFSET) = 0xC7;  // Enable & clear FIFO, 14B threshold Hannah: 0x47 / 4B threshhold
 }
 
 int uart_read_ready() {
