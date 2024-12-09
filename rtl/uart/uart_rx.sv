@@ -221,7 +221,7 @@ module uart_rx #()
     reg_write.rhr_valid         = 1'b0;
     reg_write.rhr.strct.char_rx = '0;
 
-    reg_write.lsr_valid         = 6'b000001;
+    reg_write.lsr_valid         = 6'b000000;
     reg_write.lsr_data_ready    = 1'b0;
     reg_write.lsr_overrun_err   = 1'b0;
     reg_write.lsr_fifo_err      = 1'b0;
@@ -248,6 +248,11 @@ module uart_rx #()
     timing_load       = 1'b0;
     timing_offset     = 5'b00000;
 
+    //--RHR-Combinational-------------------------------------------------------------------------
+    fifo_clear = 1'b1;
+    fifo_pop   = 1'b0;
+    rhr_full_d = rhr_full_q;
+
     //--------------------------------------------------------------------------------------------
     // Word Length 
     //--------------------------------------------------------------------------------------------
@@ -262,13 +267,19 @@ module uart_rx #()
     //--------------------------------------------------------------------------------------------
     // Clear RHR & LSR after OBI read
     //--------------------------------------------------------------------------------------------
-    if (reg_read.obi_read_rhr) begin // Clear RHR
+
+    //-Clear-RHR-and-Reset-Data-Ready-Bit---------------------------------------------------------
+    if (reg_read.obi_read_rhr) begin 
       reg_write.rhr.strct.char_rx = '0;
       reg_write.rhr_valid         = 1'b1;
+
       rhr_full_d                  = 1'b0;
+
+      reg_write.lsr_data_ready    = 1'b0;
+      reg_write.lsr_valid[0]      = 1'b1;
     end
     
-    if (reg_read.obi_read_lsr) begin // Cleaar LSR
+    if (reg_read.obi_read_lsr) begin // Clear LSR
       reg_write.lsr_overrun_err  = 1'b0;
       reg_write.lsr_par_err      = 1'b0;
       reg_write.lsr_frame_err    = 1'b0;
@@ -381,7 +392,7 @@ module uart_rx #()
 
       RXSTOP: begin
         if (stop_finish) begin
-          if (framing_err_q) begin //TODO _d ?
+          if (framing_err_q) begin 
             state_d = RXRESYNCHRONIZE;
           end else begin
             state_d = RXIDLE;
@@ -404,11 +415,6 @@ module uart_rx #()
   // WRITE RHR Combinational //
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //--Defaults----------------------------------------------------------------------------------
-    fifo_clear = 1'b1;
-    fifo_pop   = 1'b0;
-    rhr_full_d = rhr_full_q;
-
     //--------------------------------------------------------------------------------------------
     // Write RHR
     //--------------------------------------------------------------------------------------------
@@ -419,6 +425,7 @@ module uart_rx #()
         reg_write.rhr.strct.char_rx      = fifo_data_o[7:0];
         reg_write.rhr_valid              = 1'b1;
         rhr_full_d                       = 1'b1;
+
         // If Fifo Enabled, always set LSR bits with the Data on top of the FIFO
         reg_write.lsr_break_intrpt = fifo_data_o[8];
         reg_write.lsr_frame_err    = fifo_data_o[9];
@@ -430,7 +437,13 @@ module uart_rx #()
           fifo_error_index_d = fifo_error_index_q - 'b0001; 
         end
       end
-      reg_write.lsr_data_ready = ~fifo_empty; // Set Data Ready Bit
+      
+      /*if (rhr_full_q) begin
+        reg_write.lsr_data_ready = 1'b1;
+        reg_write.lsr_valid[0]   = 1'b1;
+      end*/
+      reg_write.lsr_data_ready = rhr_full_q;
+      reg_write.lsr_valid[0]   = 1'b1;
 
     end else begin // FIFO disabled : RHR acts as 1-Byte Holding Register
     
@@ -445,6 +458,7 @@ module uart_rx #()
         rhr_full_d                       = 1'b1;
 
         reg_write.lsr_data_ready         = 1'b1; // Set Data Ready Bit
+        reg_write.lsr_valid[0]           = 1'b1;
         reg_write.lsr_par_err            = parity_err_q;
         reg_write.lsr_frame_err          = framing_err_q;
         break_interrupt                  = & (~{break_q, rsr_q}); // All character bits 0 ?
@@ -459,9 +473,9 @@ module uart_rx #()
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (reg_read.fcr.strct.fifo_en) begin
-    //--------------------------------------------------------------------------------------------
-    // FIFO Reset
-    //--------------------------------------------------------------------------------------------
+      //------------------------------------------------------------------------------------------
+      // FIFO Reset
+      //------------------------------------------------------------------------------------------
       fifo_clear = 1'b0;
       
       if (reg_read.fcr.strct.rx_fifo_rst) begin
@@ -469,9 +483,9 @@ module uart_rx #()
         reg_write.fcr_rx_fifo_rst = 1'b0; 
         reg_write.fcr_rx_valid    = 1'b1;
       end 
-    //--------------------------------------------------------------------------------------------
-    // FIFO Trigger Output
-    //--------------------------------------------------------------------------------------------
+      //------------------------------------------------------------------------------------------
+      // FIFO Trigger Output
+      //------------------------------------------------------------------------------------------
       case (reg_read.fcr.strct.rx_fifo_tl)
         2'b00: tl_characters = 4'b0001; // 1 Character
         2'b01: tl_characters = 4'b0100; // 4 Characters
@@ -483,10 +497,9 @@ module uart_rx #()
       if (tl_characters <= fifo_usage) begin
         trigger = 1'b1;
       end
-
-    //--------------------------------------------------------------------------------------------
-    // FIFO Write from RSR
-    //--------------------------------------------------------------------------------------------
+      //------------------------------------------------------------------------------------------
+      // FIFO Write from RSR
+      //------------------------------------------------------------------------------------------
       if (write_init) begin
         if (fifo_full) begin
           reg_write.lsr_overrun_err = 1'b1;
@@ -503,10 +516,9 @@ module uart_rx #()
           end
         end
       end
-
-    //--------------------------------------------------------------------------------------------
-    // FIFO Timeout
-    //--------------------------------------------------------------------------------------------
+      //------------------------------------------------------------------------------------------
+      // FIFO Timeout
+      //------------------------------------------------------------------------------------------
       // timeout_trigger = (1 Startbit + 8 Databits + 1 Paritybit + 2 Stopbits) * 4
       timeout_trigger = 6'b000001 + 6'b001000 + 6'b000001 + 6'b000010; // Timeout Trigger Level
       timeout_trigger = timeout_trigger << 2; // Multiply by 4

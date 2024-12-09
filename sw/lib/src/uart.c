@@ -20,7 +20,7 @@ void uart_init() {
     *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x80;  // Enable DLAB (set baud rate divisor)
     *reg8(UART_BASE_ADDR, UART_DLAB_LSB_REG_OFFSET) = dlo;       // divisor (lo byte)
     *reg8(UART_BASE_ADDR, UART_DLAB_MSB_REG_OFFSET) = dhi;       // divisor (hi byte)
-    *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x03; // even parity, parity enabled, two stop bits , 8 bit character//0x03;  // 8 bits, no parity, one stop bit
+    *reg8(UART_BASE_ADDR, UART_LINE_CONTROL_REG_OFFSET) = 0x03;  // 8 bits, no parity, one stop bit Hannah: 0x1F even parity, parity enabled, two stop bits , 8 bit character 
     *reg8(UART_BASE_ADDR, UART_FIFO_CONTROL_REG_OFFSET) = 0xC7;  // Enable & clear FIFO, 14B threshold Hannah: 0x47 / 4B threshhold
 }
 

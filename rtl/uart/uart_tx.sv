@@ -150,9 +150,8 @@ module uart_tx #()
     // TSR - Transmitter Shift Register (parallel to serial)
     //--------------------------------------------------------------------------------------------
     if (state_q == TXDATA & (tsr_count_q <= word_len_bits)) begin
-      txd_d       = tsr_q[tsr_count_q]; //TODO ?
+      txd_d       = tsr_q[tsr_count_q]; 
       if (baud_rate_edge) begin
-        //txd_d       = tsr_q[tsr_count_q]; //TODO ?
         tsr_count_d = tsr_count_q + 1;
         tsr_finish  = (tsr_count_q == word_len_bits)? 1'b1 : 1'b0;
       end
@@ -318,7 +317,7 @@ module uart_tx #()
       end 
 
       //--Set-LSR---------------------------------------------------------------------------------
-      if (~thr_full_q) begin // TODO >?< 
+      if (fifo_empty) begin 
         reg_write.lsr_thr_empty = 1'b1;
         reg_write.lsr_valid[0]  = 1'b1;
         if (fifo_empty & tsr_empty) begin

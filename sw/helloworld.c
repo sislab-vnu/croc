@@ -59,47 +59,36 @@ int main() {
   uart_write(10);
   uart_write(13);
   uart_write_flush();*/
-  char received_char;
-  char echo_char;
-  received_char = getchar();
-  echo_char     = received_char + 1;
-  uart_write_flush();
-    //putchar(echo_char);
-  uart_write(0x41);
   
-  /*
-  char string [] = "TTM\n\r\0";
-  // Make an array of 8 arrays
-  int str_len = sizeof(string);
-  uint8_t message_tx[str_len];
-  
-  for (int i = 0; i < str_len; i++) { 
-    message_tx[i] = (uint8_t)string[i];
-  }
-  
-  uart_write_str(message_tx, str_len);
-  
-  uart_write_flush(); // Ensure all bytes are transmitted
-  */
-  // uart_txd_o in testbench should be messagetx and print it out
-
   //-----Read-UART-Test------------------------------------------------------
-  /*
-  // Read the message into a buffer
-  char buffer[TEST_MESSAGE_LENGTH];
-  uart_read_str(buffer, TEST_MESSAGE_LENGTH);
 
-  // Check if received message matches the one set in the testbench
-  int test_passed = 1;
-  for (int i = 0; i < TEST_MESSAGE_LENGTH; ++i) {
-      if (buffer[i] != message[i]) {
-          test_passed = 0;
-          break;
+  uart_write_flush();
+  
+  uint8_t received = 1;
+  uint8_t echo;
+
+  while(1) {
+
+    if (uart_read_ready()) {
+      received = uart_read();
+      echo     = received + 1;
+      if (received != 127) {
+        putchar(echo);
+      } else {
+        putchar(received);
       }
+    }
+
+    uart_write_flush();
+
+    if (received == 10) {
+      break;
+    }
   }
 
-  uart_write_flush(); // Ensure all bytes are transmitted
-  */
+  uart_write(10);
+  uart_write(13);
+  uart_write_flush();
+ 
   return 1;
-
 }
