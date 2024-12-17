@@ -73,7 +73,7 @@ module uart_baudgeneration #()
   counter #(
     .WIDTH          (5), 
     .STICKY_OVERFLOW(0)
-  ) i_counter_3 (
+  ) i_counter_2 (
     .clk_i, 
     .rst_ni,
     .clear_i   ( baud_clear       ), // Synchronous clear: Sets Counter 0 in the next cycle
