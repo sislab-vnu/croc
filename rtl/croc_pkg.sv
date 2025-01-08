@@ -193,7 +193,7 @@ package croc_pkg;
   } mgr_obi_rsp_t;
 
   /// OBI subordinate configuration (from the interconnect to a subordinate device)
-  localparam obi_pkg::obi_cfg_t SbrObiCfg = '{
+  localparam obi_pkg::obi_cfg_t SbrObiCfg = '{ 
                                   UseRReady:   1'b0,
                                   CombGnt:     1'b0,
                                   AddrWidth:     32,
@@ -205,7 +205,7 @@ package croc_pkg;
                                 };
   /// OBI Xbar <-> Subordinate address channel
   typedef struct packed {
-    logic [  SbrObiCfg.AddrWidth-1:0] addr;
+    logic [  SbrObiCfg.AddrWidth-1:0] addr; 
     logic                             we;
     logic [SbrObiCfg.DataWidth/8-1:0] be;
     logic [  SbrObiCfg.DataWidth-1:0] wdata;
