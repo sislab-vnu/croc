@@ -56,6 +56,6 @@ package gpio_reg_pkg;
   parameter logic [AddressWidth-1:0] GPIO_INTRPT_EN_OFFSET     = 11'h280;
   parameter logic [AddressWidth-1:0] GPIO_INTRPT_STATUS_OFFSET = 11'h300;
   parameter logic [AddressWidth-1:0] GPIO_INTRPT_EDGE_OFFSET   = 11'h380;
-  // Next feature uses address h380
+  
 
 endpackage

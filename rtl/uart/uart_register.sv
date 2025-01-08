@@ -2,7 +2,7 @@
 
 module uart_register #(
   /// The OBI configuration for all ports.
-  parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig,
+  parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig, // SbrObiCfg
   /// OBI request type
   parameter type obi_req_t = logic,
   /// OBI response type
@@ -55,12 +55,12 @@ module uart_register #(
   assign req_d         = obi_req_i.req;
 
   //FF for the obi rsp signals (id and valid)
-  `FF(id_q, id_d, '0, clk_i, rst_ni)
-  `FF(valid_q, valid_d, '0, clk_i, rst_ni)
-  `FF(word_addr_q, word_addr_d, '0, clk_i, rst_ni)
-  `FF(we_q, we_d, '0, clk_i, rst_ni)
-  `FF(w_err_q, w_err_d, '0, clk_i, rst_ni)
-  `FF(req_q, req_d, '0, clk_i, rst_ni)
+  `FF(id_q, id_d, '0, clk_i, rst_ni) // 5 Bits
+  `FF(valid_q, valid_d, '0, clk_i, rst_ni) // 1 Bit
+  `FF(word_addr_q, word_addr_d, '0, clk_i, rst_ni) // 3 Bits
+  `FF(we_q, we_d, '0, clk_i, rst_ni) //1 Bit
+  `FF(w_err_q, w_err_d, '0, clk_i, rst_ni) // 1 Bit
+  `FF(req_q, req_d, '0, clk_i, rst_ni) // 1 Bit
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // Register Storage//

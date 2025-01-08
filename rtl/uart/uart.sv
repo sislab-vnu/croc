@@ -2,7 +2,7 @@
 
 module uart #(
     /// The OBI configuration for all ports.
-    parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig,
+    parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig, // SbrObiCfg
     /// OBI request type
     parameter type obi_req_t = logic,
     /// OBI response type

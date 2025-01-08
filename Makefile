@@ -42,6 +42,7 @@ clean-deps:
 # Software #
 ############
 SW := /sw/bin/helloworld.hex
+SW += /sw/bin/helloworld.elf
 
 $(SW):
 	$(MAKE) -C sw/ compile

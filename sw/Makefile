@@ -66,6 +66,7 @@ $(BINDIR)/%.hex: $(BINDIR)/%.elf
 # keep dumps
 
 .PRECIOUS: $(BINDIR)/*.dump
+.PRECIOUS: $(BINDIR)/*.elf
 
 # Phonies
 
