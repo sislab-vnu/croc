@@ -281,7 +281,7 @@ global_connect
 report_image "${proj_name}.final" true true false true
 utl::report "Write output"
 write_def                      out/${proj_name}.def
-write_verilog -include_pwr_gnd out/${proj_name}_lvs.v
+write_verilog -include_pwr_gnd -remove_cells $stdfill out/${proj_name}_lvs.v
 write_verilog                  out/${proj_name}.v
 write_db                       out/${proj_name}.odb
 write_sdc                      out/${proj_name}.sdc
