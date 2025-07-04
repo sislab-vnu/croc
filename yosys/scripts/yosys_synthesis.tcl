@@ -122,13 +122,16 @@ yosys clean -purge
 
 # print paths to important instances (hierarchy and naming is final here)
 yosys select -write ${rep_dir}/${top_design}_registers.rpt t:*DFF*
-yosys tee -q -o ${rep_dir}/${top_design}_instances.rpt  select -list "t:RM_IHPSG13_*"
+if {$TECHNO eq "gf180mcu"} {
+    yosys tee -q -o ${rep_dir}/${top_design}_instances.rpt  select -list "t:gf180mcu_fd_ip_sram_*"
+} elseif {$TECHNO eq "ihp13"} {
+    yosys tee -q -o ${rep_dir}/${top_design}_instances.rpt  select -list "t:RM_IHPSG13_*"
+}
 yosys tee -q -a ${rep_dir}/${top_design}_instances.rpt  select -list "t:tc_clk*$*"
 
 
 # -----------------------------------------------------------------------------
 # mapping to technology
-
 # first map flip-flops
 yosys dfflibmap {*}$tech_cells_args
 

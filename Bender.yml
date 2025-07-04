@@ -27,6 +27,11 @@ sources:
     files:
       - ihp13/tc_clk.sv
       - ihp13/tc_sram_impl.sv
+  - target: gf180mcu
+    files:
+      - gf180mcuc/tc_clk.sv
+      - gf180mcuc/gf180mcu_sram_wrapper.sv
+      - gf180mcuc/tc_sram_impl.sv
 
   - rtl/croc_pkg.sv
   - rtl/user_pkg.sv

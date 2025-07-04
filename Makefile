@@ -8,13 +8,15 @@
 # Tools
 BENDER	  ?= bender
 PYTHON3   ?= python3
-VERILATOR ?= /foss/tools/bin/verilator
+VERILATOR ?= verilator
+#TECHNO 	  ?= ihp13
+TECHNO 	  ?= gf180mcu
 YOSYS     ?= yosys
 OPENROAD  ?= openroad
 KLAYOUT   ?= klayout
 VSIM      ?= vsim
 REGGEN    ?= $(PYTHON3) $(shell $(BENDER) path register_interface)/vendor/lowrisc_opentitan/util/regtool.py
-
+export TARGET_TECH=$(TECHNO)
 # Directories
 # directory of the path to the last called Makefile (this one)
 PROJ_DIR  := $(realpath $(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
@@ -72,7 +74,7 @@ vsim/compile_rtl.tcl: Bender.lock Bender.yml
 	$(BENDER) script vsim -t rtl -t vsim -t simulation -t verilator -DSYNTHESIS -DSIMULATION  --vlog-arg="$(VLOG_ARGS)" > $@
 
 vsim/compile_netlist.tcl: Bender.lock Bender.yml
-	$(BENDER) script vsim -t ihp13 -t vsim -t simulation -t verilator -t netlist_yosys -DSYNTHESIS -DSIMULATION > $@
+	$(BENDER) script vsim -t $(TECHNO) -t vsim -t simulation -t verilator -t netlist_yosys -DSYNTHESIS -DSIMULATION > $@
 
 ## Simulate RTL using Questasim/Modelsim/vsim
 vsim: vsim/compile_rtl.tcl $(SW_HEX)
@@ -112,7 +114,7 @@ verilator: verilator/obj_dir/Vtb_croc_soc
 # Bender manages the different IPs and can be used to generate file-lists for synthesis
 TOP_DESIGN     ?= croc_chip
 DUT_DESIGN	   ?= croc_soc
-BENDER_TARGETS ?= asic ihp13 rtl synthesis
+BENDER_TARGETS ?= asic $(TECHNO) rtl synthesis
 SV_DEFINES     ?= VERILATOR SYNTHESIS COMMON_CELLS_ASSERTS_OFF
 
 ## Generate croc.flist used to read design in yosys

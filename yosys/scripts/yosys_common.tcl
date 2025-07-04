@@ -10,12 +10,19 @@
 
 # list of global variables that may be used
 # define with scheme: <local-var> { <ENVVAR>  <fallback> }
+# if { [info exists ::env(TARGET_TECH)] {
+#     if {$::env(TARGET_TECH) ne ""} {
+# 	set TECHNO $::env(TARGET_TECH)
+#     }
+# }
+
 set variables {
     sv_flist    { SV_FLIST    "../croc.flist" }
     top_design  { TOP_DESIGN  "croc_chip"     }
     out_dir     { OUT         out             }
     tmp_dir     { TMP         tmp             }
     rep_dir     { REPORTS     reports         }
+    TECHNO      { TARGET_TECH "gf180mcu"      }
 }
 
 

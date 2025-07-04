@@ -6,7 +6,7 @@
 # - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
 # All paths relative to yosys/
-
+set TECHNO $::env(TARGET_TECH)
 if {[file exists "../technology"]} {
 	puts "0. Executing init_tech: load technology from ETHZ DZ cockpit"
 	set pdk_dir "../technology"
@@ -14,22 +14,41 @@ if {[file exists "../technology"]} {
 	set pdk_sram_lib  ${pdk_dir}/lib
 	set pdk_io_lib    ${pdk_dir}/lib
 } else {
-	puts "0. Executing init_tech: load technology from Github PDK"
-	if {![info exists pdk_dir]} {
-		set pdk_dir "../ihp13/pdk"
+    puts "0. Executing init_tech: load technology from Github PDK"
+    if {![info exists pdk_dir]} {
+	if {"$TECHNO" == "gf180mcu"} {
+	    set pdk_dir "$::env(PDK_ROOT)/$::env(PDK)"
+	    set pdk_cells_lib ${pdk_dir}/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib
+	    set pdk_sram_lib  ${pdk_dir}/libs.ref/gf180mcu_fd_ip_sram/lib
+	    set pdk_io_lib    ${pdk_dir}/libs.ref/gf180mcu_fd_io/lib
+	    set tech_cells [list "$pdk_cells_lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib"]
+	    set tech_macros [list "$pdk_sram_lib/gf180mcu_fd_ip_sram__sram64x8m8wm1__tt_025C_3v30.lib"]
+	    lappend tech_macros "$pdk_sram_lib/gf180mcu_fd_ip_sram__sram128x8m8wm1__tt_025C_3v30.lib"
+	    lappend tech_macros "$pdk_sram_lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib"
+	    lappend tech_macros "$pdk_sram_lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__tt_025C_3v30.lib"
+	    lappend tech_macros "$pdk_io_lib/gf180mcu_fd_io__tt_025C_3v30.lib"
+
+	    # for hilomap
+	    set tech_cell_tiehi {gf180mcu_fd_sc_mcu7t5v0__tieh L_HI}
+	    set tech_cell_tielo {gf180mcu_fd_sc_mcu7t5v0__tiel L_LO}
+	} elseif { "$TECHNO" == "ihp13" } {
+	    set pdk_dir "../ihp13/pdk"
+	    set pdk_cells_lib ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib
+	    set pdk_sram_lib  ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_sram/lib
+	    set pdk_io_lib    ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_io/lib
+	    set tech_cells [list "$pdk_cells_lib/sg13g2_stdcell_typ_1p20V_25C.lib"]
+	    set tech_macros [glob -directory $pdk_sram_lib *_typ_1p20V_25C.lib]
+	    lappend tech_macros "$pdk_io_lib/sg13g2_io_typ_1p2V_3p3V_25C.lib"
+
+	    # for hilomap
+	    set tech_cell_tiehi {sg13g2_tiehi L_HI}
+	    set tech_cell_tielo {sg13g2_tielo L_LO}
+	} else {
+	    puts "Unsupported Technology"
+	    exit
 	}
-	set pdk_cells_lib ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib
-	set pdk_sram_lib  ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_sram/lib
-	set pdk_io_lib    ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_io/lib
+    }
 }
-
-set tech_cells [list "$pdk_cells_lib/sg13g2_stdcell_typ_1p20V_25C.lib"]
-set tech_macros [glob -directory $pdk_sram_lib *_typ_1p20V_25C.lib]
-lappend tech_macros "$pdk_io_lib/sg13g2_io_typ_1p2V_3p3V_25C.lib"
-
-# for hilomap
-set tech_cell_tiehi {sg13g2_tiehi L_HI}
-set tech_cell_tielo {sg13g2_tielo L_LO}
 
 # pre-formated for easier use in yosys commands
 # all liberty files
