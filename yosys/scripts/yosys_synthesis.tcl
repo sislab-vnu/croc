@@ -94,6 +94,10 @@ yosys clean -purge
 yosys write_verilog -norename ${tmp_dir}/${top_design}_yosys_abstract.v
 yosys tee -q -o "${rep_dir}/${top_design}_abstract.rpt" stat -tech cmos
 
+if {$TECHNO eq "gf180mcu"} {
+    yosys extract_fa
+    yosys techmap -map "$ADDER_MAP_FILE"
+}
 yosys techmap
 yosys opt -fast
 yosys clean -purge

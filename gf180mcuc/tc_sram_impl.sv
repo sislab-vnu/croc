@@ -21,10 +21,10 @@ endmodule
 
 
 module tc_sram_impl #(
-  parameter int unsigned NumWords     = 32'd1024,
-  parameter int unsigned DataWidth    = 32'd128,
+  parameter int unsigned NumWords     = 32'd512,
+  parameter int unsigned DataWidth    = 32'd32,
   parameter int unsigned ByteWidth    = 32'd8,
-  parameter int unsigned NumPorts     = 32'd2,
+  parameter int unsigned NumPorts     = 32'd1,
   parameter int unsigned Latency      = 32'd1,
   parameter              SimInit      = "none",
   parameter bit          PrintSimCfg  = 1'b0,
@@ -245,10 +245,10 @@ module tc_sram_impl #(
     .clk(clk_i),
     .cen(~req_i),
     .gwen(~we_i),
-    .wen(~bm64),
+    .wen(~bm32),
     .addr(addr_i[0][8:0]),
-    .din(wdata64),
-    .dout(rdata64)
+    .din(wdata32),
+    .dout(rdata32)
   );
 
     // RM_IHPSG13_1P_256x64_c2_bm_bist i_cut (
@@ -278,10 +278,10 @@ module tc_sram_impl #(
     .clk(clk_i),
     .cen(~req_i),
     .gwen(~we_i),
-    .wen(~bm64),
+    .wen(~bm32),
     .addr(addr_i[0][9:0]),
-    .din(wdata64),
-    .dout(rdata64)
+    .din(wdata32),
+    .dout(rdata32)
   );
 
     // RM_IHPSG13_1P_512x64_c2_bm_bist i_cut (
@@ -310,10 +310,10 @@ module tc_sram_impl #(
     .clk(clk_i),
     .cen(~req_i),
     .gwen(~we_i),
-    .wen(~bm64),
+    .wen(~bm32),
     .addr(addr_i[0][10:0]),
-    .din(wdata64),
-    .dout(rdata64)
+    .din(wdata32),
+    .dout(rdata32)
   );
     // RM_IHPSG13_1P_1024x64_c2_bm_bist i_cut (
     //  .A_CLK   ( clk_i   ),

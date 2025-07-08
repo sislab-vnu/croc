@@ -9,8 +9,8 @@
 BENDER	  ?= bender
 PYTHON3   ?= python3
 VERILATOR ?= verilator
-#TECHNO 	  ?= ihp13
-TECHNO 	  ?= gf180mcu
+TECHNO 	  ?= ihp13
+#TECHNO 	  ?= gf180mcu
 YOSYS     ?= yosys
 OPENROAD  ?= openroad
 KLAYOUT   ?= klayout
@@ -67,7 +67,7 @@ sw: $(SW_HEX)
 ##################
 # Questasim/Modelsim/vsim
 VLOG_ARGS  = -svinputport=compat
-VSIM_ARGS  = -t 1ns -voptargs=+acc
+VSIM_ARGS  = -t 1ns -voptargs=+acc +notimingchecks +nospecify
 VSIM_ARGS += -suppress vsim-3009 -suppress vsim-8683 -suppress vsim-8386
 
 vsim/compile_rtl.tcl: Bender.lock Bender.yml
