@@ -175,9 +175,9 @@ module croc_chip import croc_pkg::*; #() (
     // sg13g2_IOPadIn        pad_jtag_tdi_i   (.pad(jtag_tdi_i),   .p2c(soc_jtag_tdi_i));
     // sg13g2_IOPadOut16mA   pad_jtag_tdo_o   (.pad(jtag_tdo_o),   .c2p(soc_jtag_tdo_o));
 
-    gf180mcu_fd_io__in_c     pad_uart_rx_i    (.PAD(uart_rx_i),    .Y(soc_uart_rx_i), .PU(1'b0), .PD(1'b1));
+    gf180mcu_fd_io__in_c     pad_uart_rx_i    (.PAD(uart_rx_i),    .Y(soc_uart_rx_i), .PU(1'b1), .PD(1'b0));
     gf180mcu_fd_io__bi_24t   pad_uart_tx_o    (.PAD(uart_tx_o),    .A(soc_uart_tx_o), .OE(1'b1),
-					       .CS(1'b0), .SL(1'b0), .IE(1'b0), .PU(1'b0), .PD(1'b0), .Y());
+					       .CS(1'b0), .SL(1'b0), .IE(1'b0), .PU(1'b1), .PD(1'b0), .Y());
 
     gf180mcu_fd_io__in_c  pad_fetch_en_i   (.PAD(fetch_en_i),   .Y(soc_fetch_en_i));
     gf180mcu_fd_io__bi_24t pad_status_o     (.PAD(status_o),     .A(soc_status_o), .OE(1'b1),
