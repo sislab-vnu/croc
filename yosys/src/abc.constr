@@ -4,6 +4,10 @@
 #
 # Authors:
 # - Philippe Sauter <phsauter@iis.ee.ethz.ch>
-
-set_driving_cell sg13g2_buf_1
-set_load 0.015
+if { $TECHNO eq "gf180mcu" } {
+    set_driving_cell gf180mcu_fd_sc_mcu7t5v0__buf_1
+    set_load 0.015
+} elseif { $TECHNO eq "ihp13" } {
+    set_driving_cell sg13g2_buf_1
+    set_load 0.015
+}
