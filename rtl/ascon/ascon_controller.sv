@@ -3,13 +3,7 @@
 // Controller for ASCON core, handling input/output from 32-bit OBI interface
 // Supports AEAD (AD + MSG) processing
 // ============================================================================
-//`include "include/asconp.sv"
-//`include "include/config.sv"
-//`include "include/functions.sv"
-`include "ascon_regs.sv"
-`include "ascon_core.sv"
-
-
+`include "config.sv"
 
 module ascon_controller #(
     parameter CCW = 64
