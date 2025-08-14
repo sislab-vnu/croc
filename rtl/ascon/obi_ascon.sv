@@ -121,7 +121,7 @@ module obi_ascon #(
 
     assign obi_rsp_o.gnt     = obi_req_i.req;
     assign obi_rsp_o.rvalid  = req_q;
-    assign obi_rsp_o.r.rdata = '0; // ascon_regs handles rdata internally
+    assign obi_rsp_o.r.rdata = data_out; // ascon_regs handles rdata internally
     assign obi_rsp_o.r.rid   = obi_req_i.a.aid;
     assign obi_rsp_o.r.err   = 1'b0;
     assign obi_rsp_o.r.r_optional = '0;
