@@ -3,21 +3,21 @@
 // ============================================================================
 `include "common_cells/registers.svh"
 
-module obi_ascon #(
+module obi_ascon import croc_pkg::*; #(
     /// OBI configuration
     parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig,
     /// OBI request struct type
-    parameter type obi_req_t = logic,
+    //parameter type obi_req_t = logic,
     /// OBI response struct type
-    parameter type obi_rsp_t = logic,
+    //parameter type obi_rsp_t = logic,
     parameter CCW = 64  // Ascon core word size
 )(
     input  logic clk_i,
     input  logic rst_ni,
 
     // OBI slave interface
-    input  obi_req_t obi_req_i,
-    output obi_rsp_t obi_rsp_o,
+    input  sbr_obi_req_t obi_req_i,
+    output sbr_obi_rsp_t obi_rsp_o,
 
     // Interrupt
     output logic irq_o
@@ -40,6 +40,9 @@ module obi_ascon #(
     logic         done;
     logic         auth;
 
+    // Output data
+    logic [31:0] reg_rdata;
+    
     // Interrupt register
     logic irq_r;
 
@@ -55,7 +58,7 @@ module obi_ascon #(
         .addr_i(obi_req_i.a.addr[3:0]),
         .wen_i(obi_req_i.a.we),
         .ren_i(obi_req_i.req & !obi_req_i.a.we),
-        .rdata_o(),
+        .rdata_o(reg_rdata),
 
         // Controller interface
         .key_o(key),
@@ -121,7 +124,7 @@ module obi_ascon #(
 
     assign obi_rsp_o.gnt     = obi_req_i.req;
     assign obi_rsp_o.rvalid  = req_q;
-    assign obi_rsp_o.r.rdata = data_out; // ascon_regs handles rdata internally
+    assign obi_rsp_o.r.rdata = reg_rdata; // ascon_regs handles rdata internally
     assign obi_rsp_o.r.rid   = obi_req_i.a.aid;
     assign obi_rsp_o.r.err   = 1'b0;
     assign obi_rsp_o.r.r_optional = '0;
