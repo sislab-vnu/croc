@@ -104,7 +104,7 @@ module tc_sram_impl #(
 
   end else if (NumWords == 256 & DataWidth == 64 & P1L1) begin : gen_256x64xBx1
     logic [63:0] wdata64, rdata64, bm64;
-    
+
     assign rdata_o = rdata64;
     assign wdata64 = wdata_i;
     assign bm64    = bm;
@@ -154,19 +154,6 @@ module tc_sram_impl #(
     .dout(rdata64)
   );
 
-    // RM_IHPSG13_1P_512x64_c2_bm_bist i_cut (
-    //   .A_CLK   ( clk_i    ),
-    //   .A_DLY   ( impl_i  ),
-    //   .A_ADDR  ( addr_i [0][8:0] ),
-    //   .A_BM    ( bm64     ),
-    //   .A_MEN   ( req_i    ),
-    //   .A_WEN   ( we_i     ),
-    //   .A_REN   ( ~we_i    ),
-    //   .A_DIN   ( wdata64  ),
-    //   .A_DOUT  ( rdata64  ),
-    //  `IHP13_TC_SRAM_512x64_TIEOFF
-    // );
-
   end else if (NumWords == 1024 & DataWidth == 64 & P1L1) begin : gen_1024x64xBx1
     logic [DataWidth-1:0] wdata64, rdata64, bm64;
     
@@ -186,18 +173,6 @@ module tc_sram_impl #(
     .din(wdata64),
     .dout(rdata64)
   );
-    // RM_IHPSG13_1P_1024x64_c2_bm_bist i_cut (
-    //    .A_CLK   ( clk_i    ),
-    //    .A_DLY   ( impl_i  ),
-    //    .A_ADDR  ( addr_i [0][9:0] ),
-    //    .A_BM    ( bm64     ),
-    //    .A_MEN   ( req_i    ),
-    //    .A_WEN   ( we_i     ),
-    //    .A_REN   ( ~we_i    ),
-    //    .A_DIN   ( wdata64  ),
-    //    .A_DOUT  ( rdata64  ),
-    //    `IHP13_TC_SRAM_1024x64_TIEOFF
-    //   );
 
   end else if (NumWords == 2048 & DataWidth == 64 & P1L1) begin : gen_2048x64xBx1
     logic [DataWidth-1:0] wdata64, rdata64, bm64;
@@ -219,18 +194,26 @@ module tc_sram_impl #(
     .dout(rdata64)
   );
 
-    // RM_IHPSG13_1P_2048x64_c2_bm_bist i_cut (
-    //    .A_CLK   ( clk_i    ),
-    //    .A_DLY   ( impl_i   ),
-    //    .A_ADDR  ( addr_i [0][10:0] ),
-    //    .A_BM    ( bm64     ),
-    //    .A_MEN   ( req_i    ),
-    //    .A_WEN   ( we_i     ),
-    //    .A_REN   ( ~we_i    ),
-    //    .A_DIN   ( wdata64  ),
-    //    .A_DOUT  ( rdata64  ),
-    //    `IHP13_TC_SRAM_2048x64_TIEOFF
-    //   );
+  end else if (NumWords == 256 && DataWidth == 32 && P1L1) begin: gen_256x32xBx1
+    logic [DataWidth-1:0] wdata32, rdata32, bm32;
+    
+    assign rdata_o = rdata32;
+    assign wdata32 = wdata_i;
+    assign bm32    = bm;
+
+  gf180mcu_sram_wrapper #(
+    .WORDS(NumWords),
+    .WIDTH(DataWidth)
+  ) i_cut (
+    .clk(clk_i),
+    .cen(~req_i),
+    .gwen(~we_i),
+    .wen(~bm32),
+    .addr(addr_i[0][7:0]),
+    .din(wdata32),
+    .dout(rdata32)
+  );
+
   end else if (NumWords == 512 && DataWidth == 32 && P1L1) begin: gen_512x32xBx1
     logic [DataWidth-1:0] wdata32, rdata32, bm32;
     
@@ -250,19 +233,6 @@ module tc_sram_impl #(
     .din(wdata32),
     .dout(rdata32)
   );
-
-    // RM_IHPSG13_1P_256x64_c2_bm_bist i_cut (
-    //  .A_CLK   ( clk_i   ),
-    //  .A_DLY   ( impl_i  ),
-    //  .A_ADDR  ( addr_i [0][8:1] ),
-    //  .A_BM    ( bm64    ),
-    //  .A_MEN   ( req_i   ),
-    //  .A_WEN   ( we_i    ),
-    //  .A_REN   ( ~we_i   ),
-    //  .A_DIN   ( wdata64 ),
-    //  .A_DOUT  ( rdata64 ),
-    //  `IHP13_TC_SRAM_256x64_TIEOFF
-    // );
 
   end else if (NumWords == 1024 && DataWidth == 32 && P1L1) begin: gen_1024x32xBx1
     logic [DataWidth-1:0] wdata32, rdata32, bm32;
@@ -284,18 +254,6 @@ module tc_sram_impl #(
     .dout(rdata32)
   );
 
-    // RM_IHPSG13_1P_512x64_c2_bm_bist i_cut (
-    //  .A_CLK   ( clk_i   ),
-    //  .A_DLY   ( impl_i  ),
-    //  .A_ADDR  ( addr_i [0][9:1] ),
-    //  .A_BM    ( bm64    ),
-    //  .A_MEN   ( req_i   ),
-    //  .A_WEN   ( we_i    ),
-    //  .A_REN   ( ~we_i   ),
-    //  .A_DIN   ( wdata64 ),
-    //  .A_DOUT  ( rdata64 ),
-    //  `IHP13_TC_SRAM_512x64_TIEOFF
-    // );
   end else if (NumWords == 2048 && DataWidth == 32 && P1L1) begin: gen_2048x32xBx1
     logic [DataWidth-1:0] wdata32, rdata32, bm32;
     
@@ -315,18 +273,6 @@ module tc_sram_impl #(
     .din(wdata32),
     .dout(rdata32)
   );
-    // RM_IHPSG13_1P_1024x64_c2_bm_bist i_cut (
-    //  .A_CLK   ( clk_i   ),
-    //  .A_DLY   ( impl_i  ),
-    //  .A_ADDR  ( addr_i [0][10:1] ),
-    //  .A_BM    ( bm64    ),
-    //  .A_MEN   ( req_i   ),
-    //  .A_WEN   ( we_i    ),
-    //  .A_REN   ( ~we_i   ),
-    //  .A_DIN   ( wdata64 ),
-    //  .A_DOUT  ( rdata64 ),
-    //  `IHP13_TC_SRAM_1024x64_TIEOFF
-    // );
 
   end else begin : gen_blackbox
 

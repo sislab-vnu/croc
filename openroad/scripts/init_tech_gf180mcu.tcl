@@ -63,7 +63,7 @@ puts "Init cell-lef"
 read_lef ${pdk_cells_lef}/gf180mcu_fd_sc_mcu7t5v0.lef
 
 puts "Init IO-lef"
-read_lef ../gf180mcuc/gf180mcu_fd_io.tlef
+read_lef ../gf180mcu/gf180mcu_fd_io.tlef
 foreach file [glob -directory $pdk_io_lef *.lef] {
 	read_lef "$file"
 }

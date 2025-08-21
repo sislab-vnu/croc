@@ -31,8 +31,8 @@ if {[file exists "../technology"]} {
 	    # for hilomap
 	    set tech_cell_tiehi {gf180mcu_fd_sc_mcu7t5v0__tieh Z}
 	    set tech_cell_tielo {gf180mcu_fd_sc_mcu7t5v0__tiel ZN}
-	    set ADDER_MAP_FILE "../gf180mcuc/techmap/cells_adders.v"
-	    set LATCH_MAP_FILE "../gf180mcuc/techmap/cells_latch.v"
+	    set ADDER_MAP_FILE "../gf180mcu/techmap/cells_adders.v"
+	    set LATCH_MAP_FILE "../gf180mcu/techmap/cells_latch.v"
 	} elseif { "$TECHNO" == "ihp13" } {
 	    set pdk_dir "../ihp13/pdk"
 	    set pdk_cells_lib ${pdk_dir}/ihp-sg13g2/libs.ref/sg13g2_stdcell/lib
