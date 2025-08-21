@@ -29,8 +29,8 @@ if {[file exists "../technology"]} {
 	    lappend tech_macros "$pdk_io_lib/gf180mcu_fd_io__tt_025C_3v30.lib"
 
 	    # for hilomap
-	    set tech_cell_tiehi {gf180mcu_fd_sc_mcu7t5v0__tieh L_HI}
-	    set tech_cell_tielo {gf180mcu_fd_sc_mcu7t5v0__tiel L_LO}
+	    set tech_cell_tiehi {gf180mcu_fd_sc_mcu7t5v0__tieh Z}
+	    set tech_cell_tielo {gf180mcu_fd_sc_mcu7t5v0__tiel ZN}
 	    set ADDER_MAP_FILE "../gf180mcuc/techmap/cells_adders.v"
 	    set LATCH_MAP_FILE "../gf180mcuc/techmap/cells_latch.v"
 	} elseif { "$TECHNO" == "ihp13" } {
