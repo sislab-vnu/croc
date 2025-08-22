@@ -87,8 +87,8 @@ utl::report "###################################################################
 
 # set_default_view
 # Set layers used for estimate_parasitics
-set_wire_rc -clock -layer Metal4
-set_wire_rc -signal -layer Metal4
+set_wire_rc -clock -layer Metal3
+set_wire_rc -signal -layer Metal3
 # don't touch any clock-tree related nets as
 # repair_timing can insert a 'split0000' buffer which then prevents CTS from running
 set clock_nets [get_nets -of_objects [get_pins -of_objects "*_reg" -filter "name == CLK"]]
@@ -97,13 +97,15 @@ set_dont_use $dont_use_cells
 
 utl::report "Repair tie fanout"
 repair_tie_fanout gf180mcu_fd_sc_mcu7t5v0__tieh/Z
-repair_tie_fanout gf180mcu_fd_sc_mcu7t5v0__tiel/Z
+repair_tie_fanout gf180mcu_fd_sc_mcu7t5v0__tiel/ZN
+
+repair_timing -setup -verbose -setup_margin 0 -sequence unbuffer,sizeup,swap,buffer -repair_tns 100 -skip_last_gasp
 
 utl::report "Remove buffers"
 remove_buffers
 
 utl::report "Repair design"
-repair_design -verbose
+repair_design -verbose -pre_placement
 
 save_checkpoint ${log_id_str}_${proj_name}.pre_place
 
@@ -119,12 +121,12 @@ utl::report "###################################################################
 
 set_thread_count 8
 
-set GPL_ARGS {  -density 0.40 }
+set GPL_ARGS {  -density 0.30 }
 
-set GPL2_ARGS { -density 0.40
+set GPL2_ARGS { -density 0.30
                 -routability_driven
                 -routability_check_overflow 0.30
-                -timing_driven }
+                }
 # density:            In every part of the chip, about N% of the area is occupied by standard cells
 # routability_driven: Reduce density target when there are a lot of wires in an area
 # check_overflow:     Higher means routability starts being considered earlier in placement
@@ -147,7 +149,7 @@ utl::report "Repair design"
 repair_design -verbose
 save_checkpoint ${log_id_str}_${proj_name}.gpl1_fix
 
-place_pins -hor_layers Metal3 -ver_layers Metal2 -corner_avoidance 0 -min_distance 0.12
+# place_pins -hor_layers Metal3 -ver_layers Metal2 -corner_avoidance 0 -min_distance 0.12
 
 # old versions of repair_timing may swap non-equal pins, deactivated for now to avoid problems
 # Likely introduced in:  https://github.com/The-OpenROAD-Project/OpenROAD/pull/3215 (fixed in new versions)
@@ -200,7 +202,7 @@ utl::report "Repair clock inverters"
 repair_clock_inverters
 
 utl::report "Clock Tree Synthesis"
-set_wire_rc -clock -layer Metal4
+set_wire_rc -clock -layer Metal3
 clock_tree_synthesis -buf_list $ctsBuf -root_buf $ctsBufRoot \
                      -sink_clustering_enable \
                      -obstruction_aware \
@@ -255,8 +257,8 @@ utl::report "###################################################################
 # to place vias down to M2/M3 -> reserve some space on M2/M3
 # Reduce TM1 to avoid too much routing there (bigger tracks -> bad for routing)
 set_global_routing_layer_adjustment Metal2-Metal3 0.30
-set_global_routing_layer_adjustment TopMetal1 0.20
-set_routing_layers -signal Metal2-TopMetal1 -clock Metal2-TopMetal1
+set_global_routing_layer_adjustment Metal4 0.20
+set_routing_layers -signal Metal2-Metal4 -clock Metal2-Metal4
 
 utl::report "Global route"
 global_route -guide_file ${report_dir}/${log_id_str}_${proj_name}_route.guide \
@@ -314,7 +316,7 @@ utl::report "Detailed route"
 set_thread_count 8
 detailed_route -output_drc ${report_dir}/${log_id_str}_${proj_name}_route_drc.rpt \
                -bottom_routing_layer Metal2 \
-               -top_routing_layer TopMetal1 \
+               -top_routing_layer Metal4 \
                -droute_end_iter 30 \
                -drc_report_iter_step 5 \
                -save_guide_updates \

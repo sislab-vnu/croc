@@ -29,7 +29,7 @@ backend: $(OR_OUT)/$(PROJ_NAME).def
 openroad: $(OR_OUT)/$(PROJ_NAME).def
 
 ## Place & Route flow using OpenROAD
-$(OR_OUT_FILES): $(NETLIST) $(OR_DIR)/scripts/*.tcl $(OR_DIR)/src/*.tcl $(OR_DIR)/src/*.sdc $(OR_DIR)/IHP_rcx_patterns.rules
+$(OR_OUT_FILES): $(NETLIST) $(OR_DIR)/scripts/*.tcl $(OR_DIR)/src/*.tcl $(OR_DIR)/src/*.sdc
 	mkdir -p $(SAVE)
 	mkdir -p $(REPORTS)
 	mkdir -p $(OR_OUT)
@@ -40,9 +40,9 @@ $(OR_OUT_FILES): $(NETLIST) $(OR_DIR)/scripts/*.tcl $(OR_DIR)/src/*.tcl $(OR_DIR
 	PROJ_NAME="$(PROJ_NAME)" \
 	SAVE="$(SAVE)" \
 	REPORTS="$(REPORTS)" \
-	PDK="$(CROC_ROOT)/ihp13/pdk" \
+	PDK="$(PDK_ROOT)/$(PDK)" \
 	QT_QPA_PLATFORM=$$(if [ -z "$$DISPLAY" ]; then echo "offscreen"; else echo "$$QT_QPA_PLATFORM"; fi) \
-	$(OPENROAD) scripts/chip.tcl \
+	$(OPENROAD) -threads 10 scripts/chip_gf180mcu.tcl \
 		$$(if [ "$(gui)" = "1" ]; then echo "-gui"; fi) \
 		-log $(PROJ_NAME).log \
 		2>&1 | TZ=UTC gawk '{ print strftime("[%Y-%m-%d %H:%M %Z]"), $$0 }';

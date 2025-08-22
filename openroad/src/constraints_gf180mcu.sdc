@@ -11,7 +11,7 @@
 ## Global ##
 ############
 
-source src/instances.tcl
+source src/instances_gf180mcu.tcl
 
 
 #############################
@@ -82,8 +82,9 @@ puts "Input/Outputs..."
 
 # Reset should propagate to system domain within a clock cycle.
 set_input_delay -max [ expr $TCK_JTG * 0.10 ] [get_ports rst_ni]  
-set_false_path -hold   -from [get_ports rst_ni]
-set_max_delay $TCK_SYS -from [get_ports rst_ni]
+set_false_path -from [get_ports rst_ni]
+# set_false_path -hold   -from [get_ports rst_ni]
+# set_max_delay $TCK_SYS -from [get_ports rst_ni]
 
 
 ##########

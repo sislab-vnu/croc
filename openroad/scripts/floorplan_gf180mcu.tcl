@@ -98,7 +98,7 @@ set X [expr $floor_midpointX + $RamSize256x8_W + ($floorPaddingX*1.5)]
 placeInstance $bank0_sram3 $X $Y R0
 
 # Bank1
-set Y [expr $floor_topY - ($RamSize256x8_H*2)  - ($floorPaddingY*10)]
+set Y [expr $floor_topY - ($RamSize256x8_H*3.0)  - ($floorPaddingY*10)]
 set X [expr $floor_midpointX - ($RamSize256x8_W*2) - ($floorPaddingX*1.5)]
 placeInstance $bank1_sram0 $X $Y R180
 

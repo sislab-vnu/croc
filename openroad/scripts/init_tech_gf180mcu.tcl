@@ -83,7 +83,7 @@ set iocorner gf180mcu_fd_io__cor
 set iofill [ list gf180mcu_fd_io__fill1 gf180mcu_fd_io__fill5 gf180mcu_fd_io__fill10]
 
 # the repair_timing/repair_design commands may try to use IO cells as buffers
-set dont_use_cells gf180mcu_fd_io*
+set dont_use_cells "gf180mcu_fd_io* *_1"
 
 proc makeTracks {} {
     utl::report "Metal Tracks"
