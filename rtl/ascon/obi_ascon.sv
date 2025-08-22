@@ -3,21 +3,21 @@
 // ============================================================================
 `include "common_cells/registers.svh"
 
-module obi_ascon import croc_pkg::*; #(
+module obi_ascon #(
     /// OBI configuration
     parameter obi_pkg::obi_cfg_t ObiCfg = obi_pkg::ObiDefaultConfig,
     /// OBI request struct type
-    //parameter type obi_req_t = logic,
+    parameter type obi_req_t = logic,
     /// OBI response struct type
-    //parameter type obi_rsp_t = logic,
+    parameter type obi_rsp_t = logic,
     parameter CCW = 64  // Ascon core word size
 )(
     input  logic clk_i,
     input  logic rst_ni,
 
     // OBI slave interface
-    input  sbr_obi_req_t obi_req_i,
-    output sbr_obi_rsp_t obi_rsp_o,
+    input  obi_req_t obi_req_i,
+    output obi_rsp_t obi_rsp_o,
 
     // Interrupt
     output logic irq_o
