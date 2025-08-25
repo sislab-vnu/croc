@@ -58,6 +58,9 @@ sources:
     files:
       # Level 0
       - rtl/croc_chip.sv
+      - rtl/croc_culp.sv
+      - rtl/croc_padring.sv
+      - rtl/croc_culp_chip.sv
   
   # netlist for simulation
   - target: netlist_yosys
