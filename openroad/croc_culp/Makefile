@@ -11,5 +11,5 @@ gui_2_3_floorplan_tapcell:
 gui_2_4_floorplan_pdn:
 	make -f ../OpenROAD-flow-scripts/flow/Makefile DESIGN_CONFIG=config.mk $@
 clean:
-	-rm -rf logs results reports objects
+	-rm -rf logs results reports objects hier_rtlmp
 .PHONY: clean croc_culp croc_culp-gui
