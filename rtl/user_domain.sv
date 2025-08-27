@@ -15,15 +15,13 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   
   input  sbr_obi_req_t user_sbr_obi_req_i, // User Sbr (rsp_o), Croc Mgr (req_i)
   output sbr_obi_rsp_t user_sbr_obi_rsp_o,
-
+  
   output mgr_obi_req_t user_mgr_obi_req_o, // User Mgr (req_o), Croc Sbr (rsp_i)
   input  mgr_obi_rsp_t user_mgr_obi_rsp_i,
 
   input  logic [      GpioCount-1:0] gpio_in_sync_i, // synchronized GPIO inputs
   output logic [NumExternalIrqs-1:0] interrupts_o // interrupts to core
-);
-
-  assign interrupts_o = '0;  
+);  
 
 
   //////////////////////
@@ -41,11 +39,20 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   // ----------------------------------------------------------------------------------------------
   // User Subordinate Buses
   // ----------------------------------------------------------------------------------------------
-  
+
   // collection of signals from the demultiplexer
   sbr_obi_req_t [NumDemuxSbr-1:0] all_user_sbr_obi_req;
   sbr_obi_rsp_t [NumDemuxSbr-1:0] all_user_sbr_obi_rsp;
 
+  // ASCON Subordinate Bus
+  logic irq_ascon;
+  sbr_obi_req_t user_ascon_obi_req;
+  sbr_obi_rsp_t user_ascon_obi_rsp;
+
+  assign user_ascon_obi_req               = all_user_sbr_obi_req[UserAscon];
+  assign all_user_sbr_obi_rsp[UserAscon]  = user_ascon_obi_rsp;
+  assign interrupts_o = {3'b0, irq_ascon};
+  
   // Error Subordinate Bus
   sbr_obi_req_t user_error_obi_req;
   sbr_obi_rsp_t user_error_obi_rsp;
@@ -114,5 +121,19 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
     .obi_req_i  ( user_error_obi_req ),
     .obi_rsp_o  ( user_error_obi_rsp )
   );
+  
+  // ASCON Subordinate
+  obi_ascon #(
+    .ObiCfg    ( SbrObiCfg     ),
+    .obi_req_t ( sbr_obi_req_t ),
+    .obi_rsp_t ( sbr_obi_rsp_t )
+  ) i_user_ascon (
+    .clk_i,
+    .rst_ni,
+    .obi_req_i ( user_ascon_obi_req ),
+    .obi_rsp_o ( user_ascon_obi_rsp ),
+    .irq_o(irq_ascon)
+  );
+
 
 endmodule

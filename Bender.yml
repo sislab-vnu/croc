@@ -19,7 +19,7 @@ dependencies:
   obi:                  { git: "https://github.com/pulp-platform/obi.git",                  version: 0.1.7  }
   obi_peripherals:      { git: "https://github.com/pulp-platform/obi_peripherals.git",      rev: 21ee04d    } # UART
   cve2:                 { path: "rtl/cve2" } # a vendor package (no Bender.yml), see below 
-
+  ascon:                { git: "https://github.com/leducanhanhlc/ascon-verilog.git",        rev: main    }
 
 sources:
   # Level 0
@@ -196,3 +196,26 @@ vendor_package:
       - { from: 'README.md',                                    to: 'README.md',             patch_dir: '' }
       - { from: 'doc/03_reference/images/blockdiagram.svg',     to: 'blockdiagram.svg',      patch_dir: '' }
       - { from: 'vendor/lowrisc_ip/ip/prim/rtl/',               to: 'include/lowrisc_prim/', patch_dir: 'lowrisc_prim/' }
+
+
+
+  ################
+  # ASCON IPCORE #
+  ################
+  - name: ascon
+    target_dir: rtl/ascon
+    upstream: { git: "https://github.com/leducanhanhlc/ascon-verilog.git", rev: "7e6a0c605258c7ad6e67904c39fc410a3773ce07" }
+    patch_dir: "rtl/patches/ascon"
+    exclude_from_upstream:
+      - "rtl/ascon_verilator_wrapper.sv"
+      - "surfer"
+      - "syn"
+      - "tb"
+      - "wolfssl"
+      - "ascon.py"
+      - "test.py"
+      - "README.md"
+      - "CITATION.cff"
+    mapping:
+      - { from: 'rtl/',                                         to: '',                      patch_dir: 'rtl/' }
+
