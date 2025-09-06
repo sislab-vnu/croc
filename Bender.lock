@@ -34,6 +34,14 @@ packages:
     dependencies:
     - common_cells
     - common_verification
+  obi_dpll:
+    revision: null
+    version: null
+    source:
+      Path: rtl/user_domain/dpll
+    dependencies:
+    - common_cells
+    - obi
   obi_peripherals:
     revision: null
     version: null

@@ -11,6 +11,8 @@
 #include "gpio.h"
 #include "util.h"
 
+#define DPLL_BASE_ADDR 0x20002000
+
 /// @brief Example integer square root
 /// @return integer square root of n
 uint32_t isqrt(uint32_t n) {
@@ -40,7 +42,6 @@ int main() {
     printf("Hello World!\n");
     // wait until uart has finished sending
     uart_write_flush();
-
     // uart loopback
     uart_loopback_enable();
     printf("internal msg\n");
@@ -56,7 +57,11 @@ int main() {
     printf("Loopback received: ");
     printf(receive_buff);
     uart_write_flush();
-
+    /* printf("Test PLL\n");
+    // PLL TSE
+    *reg8(DPLL_BASE_ADDR,0) = 0x1A;
+    *reg8(DPLL_BASE_ADDR,1) = 0x1B;
+    printf("End Test PLL\n"); */
     // toggling some GPIOs
     gpio_set_direction(0xFFFF, 0x000F); // lowest four as outputs
     gpio_write(0x0A);  // ready output pattern
