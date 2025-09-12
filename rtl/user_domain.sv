@@ -57,7 +57,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   assign user_error_obi_req              = all_user_sbr_obi_req[UserError];
   assign all_user_sbr_obi_rsp[UserError] = user_error_obi_rsp;
   assign dpll_obi_req              = all_user_sbr_obi_req[UserDpll];
-  assign all_user_sbr_obi_rsp[UserDpll] = user_error_obi_rsp;
+  assign all_user_sbr_obi_rsp[UserDpll] = dpll_obi_rsp;
 
 
   //-----------------------------------------------------------------------------------------------
@@ -131,8 +131,6 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
    
     .obi_req_i ( dpll_obi_req ),
     .obi_rsp_o ( dpll_obi_rsp ),
-    .irq_o     (      ), 
-    .irq_no    ( ), 
     .dpll_cfg  ( )
 );
 

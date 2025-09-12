@@ -31,8 +31,8 @@ module obi_dpll #(
   // Import the UART package for definitions and parameters
   import obi_dpll_pkg::*;
 
-   reg_read_t reg_read;
-   reg_write_t reg_write;
+   dpll_reg2hw_t reg_w;
+   dpll_hw2reg_t reg_r;
    
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // REGISTER INTERFACE //
@@ -48,8 +48,8 @@ module obi_dpll #(
     .obi_req_i,
     .obi_rsp_o,
 
-    .reg_read_o  (reg_read),
-    .reg_write_i (reg_write)
+    .reg2hw  (reg_w),
+    .hw2reg (reg_r)
   );
 
 endmodule

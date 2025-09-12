@@ -24,132 +24,151 @@ module obi_dpll_register import obi_dpll_pkg::*; #(
   // OBI response interface
   output obi_rsp_t obi_rsp_o, // r.rdata, r.rid, r.err, r.r_optional | gnt, rvalid
 
-  output reg_read_t reg_read_o,   // Current register values
-  input  reg_write_t reg_write_i  // Internal updates to register values
+  output dpll_reg2hw_t reg2hw,   // Current register values
+  input  dpll_hw2reg_t hw2reg  // Internal updates to register values
 );
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   // Obi Preparations //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Signals for the OBI response
-  logic [ObiCfg.DataWidth-1:0] rsp_data;
-  logic                        valid_d, valid_q;         // delayed for the response phase
-  logic                        err;
-  logic                        w_err_d, w_err_q;
-  logic [AddressBits-1:0]      word_addr_d, word_addr_q; // delayed for the response phase
-  logic [ObiCfg.IdWidth-1:0]   id_d, id_q;               // delayed for the response phase
-  logic                        we_d, we_q;
-  logic                        req_d, req_q;
+  logic                           valid_d, valid_q;         // delayed to the response phase
+  logic                           we_d, we_q;               // delayed to the response phase
+  logic                           req_d, req_q;             // delayed to the response phase
+  logic [AddressWidth-1:0]        write_addr;               // in request phase (word addr)
+  logic [AddressWidth-1:0]        read_addr_d, read_addr_q; // delayed to the response phase (word addr)
+  logic [ObiCfg.IdWidth-1:0]      id_d, id_q;               // delayed to the response phase
+  logic                           obi_err;
+  logic                           w_err_d, w_err_q;         // delay write error to response phase
+  // signals used in read/write for register
+  logic [ObiCfg.DataWidth-1:0]    obi_rdata, obi_wdata;
+  logic                           obi_read_request, obi_write_request;
 
   // OBI rsp Assignment
   always_comb begin
-    obi_rsp_o         = '0;
-    obi_rsp_o.r.rdata = rsp_data;
-    obi_rsp_o.r.rid   = id_q;
-    obi_rsp_o.r.err   = err;
-    obi_rsp_o.gnt     = obi_req_i.req;
-    obi_rsp_o.rvalid  = valid_q;
+    obi_rsp_o              = '0;
+    obi_rsp_o.r.rdata      = obi_rdata;
+    obi_rsp_o.r.rid        = id_q;
+    obi_rsp_o.r.err        = obi_err;
+    obi_rsp_o.gnt          = obi_req_i.req;
+    obi_rsp_o.rvalid       = valid_q;
   end
+
+  // internally used signals
+  assign obi_wdata         = obi_req_i.a.wdata;
+  assign obi_read_request  = req_q & ~we_q;                  // in response phase (one cycle later)
+  assign obi_write_request = obi_req_i.req & obi_req_i.a.we; // in request phase (same cycle)
 
   // id, valid and address handling
-  assign id_d         = obi_req_i.a.aid;
-  assign valid_d      = obi_req_i.req;
-  assign word_addr_d  = obi_req_i.a.addr[AddressOffset+:AddressBits];
-  assign we_d         = obi_req_i.a.we;
-  assign req_d        = obi_req_i.req;
+  assign id_d          = obi_req_i.a.aid;
+  assign valid_d       = obi_req_i.req;
+  assign write_addr    = obi_req_i.a.addr[AddressWidth-1:2]; // write in same cycle
+  assign read_addr_d   = obi_req_i.a.addr[AddressWidth-1:2]; // delay read to response phase
+  assign we_d          = obi_req_i.a.we;
+  assign req_d         = obi_req_i.req;
 
-  // FF for the obi rsp signals (id and valid)
-  `FF(id_q, id_d, '0, clk_i, rst_ni)               // 5 Bits
-  `FF(valid_q, valid_d, '0, clk_i, rst_ni)         // 1 Bit
-  `FF(word_addr_q, word_addr_d, '0, clk_i, rst_ni) // #AddressBits Bits
-  `FF(we_q, we_d, '0, clk_i, rst_ni)               // 1 Bit
-  `FF(w_err_q, w_err_d, '0, clk_i, rst_ni)         // 1 Bit
-  `FF(req_q, req_d, '0, clk_i, rst_ni)             // 1 Bit
+    // FF for the obi rsp signals (id, valid, address, we and req)
+    `FF(id_q, id_d, '0, clk_i, rst_ni)
+    `FF(valid_q, valid_d, '0, clk_i, rst_ni)
+    `FF(read_addr_q, read_addr_d, '0, clk_i, rst_ni)
+    `FF(req_q, req_d, '0, clk_i, rst_ni)
+    `FF(we_q, we_d, '0, clk_i, rst_ni)
+    `FF(w_err_q, w_err_d, '0, clk_i, rst_ni)
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   // Registers //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // bits in register organized together to ease read/write
+  typedef struct packed {
+     logic 	 en;         // Direction register
+     logic 	 dco;
+     logic [4:0] div;        // Input register
+     logic [26:0] extrim;    // Interrupt edge sensitivity register
+  } dpll_reg_fields_t;
+
+  // register signals
   dpll_reg_fields_t reg_d, reg_q;
-  dpll_reg_fields_t new_reg; // next value of the registers if no read/write occurs (hw update)
+  `FF(reg_q, reg_d, '0, clk_i, rst_ni)
+  
+  dpll_reg_fields_t new_reg; // new value of regs if there is no OBI transaction
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
   // COMB LOGIC //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-  // output current register values
-  assign reg_read_o.CFG = reg_q.CFG;
-  assign reg_read_o.EXTRIM = reg_q.EXTRIM;
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  //-- Internal updates to registers -------------------------------------------------------------
-  always_comb begin : hw_update
-    // default
-    new_reg = reg_q;
-  end
-
-  //-- Software updates to registers -------------------------------------------------------------
+  // output data from internal register
   always_comb begin
-    // default
-    err     = w_err_q;
-    w_err_d = 1'b0;
+     reg2hw.en          = reg_q.en;
+     reg2hw.div         = reg_q.div;
+     reg2hw.dco         = reg_q.dco;
+     reg2hw.extrim      = reg_q.extrim;
+  end
 
-    // read/write indicators
-    reg_read_o.obi_read_cfg  = 1'b0;
-    reg_read_o.obi_read_extrim  = 1'b0;
+  // update registers
+  always_comb begin
+    // defaults
+    obi_rdata  = 32'h0;   // default value for read
+    obi_err    = w_err_q;
+    w_err_d    = 1'b0;
+    new_reg    = reg_q;   // registers stay the same
 
-    rsp_data = 32'h0;
+     // update new_reg
+     // we do nothing in this version
+     
+    // commit changes
+    reg_d      = new_reg; // update regs without OBI transaction
 
-    reg_d = new_reg;
+    //---------------------------------------------------------------------------------
+    // WRITE
+    //---------------------------------------------------------------------------------
+    if (obi_write_request) begin
+      obi_err = 1'b0;
+      case ({write_addr, 2'b00})
+        DPLL_CFG_OFFSET: begin
+           reg_d.div = obi_wdata[4:0];
+	   reg_d.en = obi_wdata[7];
+	   reg_d.dco = obi_wdata[6];
+        end
 
-    //-- OBI-Writes ------------------------------------------------------------------------------
-    if (obi_req_i.req & obi_req_i.a.we & obi_req_i.a.be[0]) begin
+        DPLL_EXTRIM_OFFSET: begin
+           reg_d.extrim = obi_wdata[26:0];
+        end
 
-      w_err_d = 1'b0;
-        case (word_addr_d)
-          RegAddrCFG: begin
-            reg_d.CFG = obi_req_i.a.wdata[RegWidthCfg-1:0];
-          end
-
-          RegAddrEXTRIM: begin
-            reg_d.EXTRIM = obi_req_i.a.wdata[RegWidthExtrim-1:0];
-          end
-
-          default: begin
-            w_err_d = 1'b1; // unmapped register access
-          end
-        endcase
-
+        default: begin
+          w_err_d = 1'b1; // unmapped register access
+        end
+      endcase
     end
+    //---------------------------------------------------------------------------------
+    // READ
+    //---------------------------------------------------------------------------------
+    if (obi_read_request) begin
+      obi_err = 1'b0;
+       obi_rdata = 'h0;
+      case ({read_addr_q, 2'b00})
+        DPLL_CFG_OFFSET: begin
+           obi_rdata[4:0] = reg_q.div;
+	   obi_rdata[7] = reg_q.en;
+	   obi_rdata[6] = reg_q.dco;
+        end
 
-    //-- OBI-Read --------------------------------------------------------------------------------
-    if (req_q & ~we_q) begin
+        DPLL_EXTRIM_OFFSET: begin
+          obi_rdata = reg_q.extrim;
+        end
 
-      err = 1'b0;
+        // DPLL_STATUS_OFFSET: begin
+        //   obi_rdata = reg_q.in;
+        // end
 
-        case (word_addr_q)
-          RegAddrCFG: begin
-            rsp_data[RegWidthCfg-1:0] = reg_q.CFG;
-            reg_read_o.obi_read_cfg  = 1'b1;
-          end
-
-          RegAddrEXTRIM: begin
-             rsp_data[RegWidthExtrim-1:0] = reg_q.EXTRIM;
-	     reg_read_o.obi_read_extrim = 1'b1;
-          end
-
-          default: begin
-            err = 1'b1;
-          end
-        endcase
+        default: begin
+          obi_rdata = 32'hBADCAB1E;  // Return error value in devmode for unmapped reads
+          obi_err   = 1'b1;
+        end
+      endcase
     end
 
   end
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-  // SEQUENTIAL LOGIC //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-
-  `FF(reg_q, reg_d, obi_dpll_pkg::RegResetVal, clk_i, rst_ni)
 
 endmodule

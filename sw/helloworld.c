@@ -11,7 +11,7 @@
 #include "gpio.h"
 #include "util.h"
 
-#define DPLL_BASE_ADDR 0x20002000
+#define DPLL_BASE_ADDR 0x20000000
 
 /// @brief Example integer square root
 /// @return integer square root of n
@@ -57,11 +57,6 @@ int main() {
     printf("Loopback received: ");
     printf(receive_buff);
     uart_write_flush();
-    /* printf("Test PLL\n");
-    // PLL TSE
-    *reg8(DPLL_BASE_ADDR,0) = 0x1A;
-    *reg8(DPLL_BASE_ADDR,1) = 0x1B;
-    printf("End Test PLL\n"); */
     // toggling some GPIOs
     gpio_set_direction(0xFFFF, 0x000F); // lowest four as outputs
     gpio_write(0x0A);  // ready output pattern
@@ -74,6 +69,12 @@ int main() {
     asm volatile ("nop; nop; nop; nop; nop;");
     printf("GPIO (expect 0x50): 0x%x\n", gpio_read());
     uart_write_flush();
+
+    printf("Test PLL\n");
+    // PLL TSE
+    //*reg8(DPLL_BASE_ADDR,0) = 0x1A;
+    *reg32(DPLL_BASE_ADDR,0) = 0x1B;
+    printf("End Test PLL\n");
 
     // doing some compute
     uint32_t start = get_mcycle();
