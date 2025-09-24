@@ -5,6 +5,7 @@ overrides:
   apb: { path: "rtl/apb" }
   register_interface: { path: "rtl/register_interface" }
   obi_peripherals: { path: "rtl/obi_uart" }
+  obi_dpll: { path: "rtl/user_domain/dpll" }
   ibex: { path: "rtl/ibex" }
   obi: { path: "rtl/obi" }
   riscv-dbg: { path: "rtl/riscv-dbg" }

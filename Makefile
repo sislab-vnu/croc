@@ -9,8 +9,8 @@
 BENDER	  ?= bender
 PYTHON3   ?= python3
 VERILATOR ?= verilator
-TECHNO 	  ?= ihp13
-#TECHNO 	  ?= gf180mcu
+#TECHNO 	  ?= ihp13
+TECHNO 	  ?= gf180mcu
 YOSYS     ?= yosys
 OPENROAD  ?= openroad
 KLAYOUT   ?= klayout
@@ -117,7 +117,7 @@ verilator: verilator/obj_dir/Vtb_croc_soc
 # Open Source Flow #
 ####################
 # Bender manages the different IPs and can be used to generate file-lists for synthesis
-TOP_DESIGN     ?= croc_chip
+TOP_DESIGN     ?= croc_culp
 DUT_DESIGN	   ?= croc_soc
 BENDER_TARGETS ?= asic $(TECHNO) rtl synthesis
 SV_DEFINES     ?= VERILATOR SYNTHESIS COMMON_CELLS_ASSERTS_OFF
