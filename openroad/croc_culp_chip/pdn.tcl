@@ -12,6 +12,11 @@ add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSE$}
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSC$}
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VPW$}
 
+add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {DVDD} -power
+add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {DVSS} -ground
+
+# global_connect
+
 ####################################
 # voltage domains
 ####################################
@@ -26,8 +31,8 @@ add_pdn_ring -grid {core_grid} \
    -widths       "4.48 4.48" \
    -spacings     "0.56 0.56" \
    -pad_offsets  "6 6" \
-   -connect_to_pads                    \
-   -connect_to_pad_layers Metal5
+    -connect_to_pads                    \
+    -connect_to_pad_layers {Metal2 Metal5}
 
 add_pdn_stripe -grid {core_grid} \
     -layer {Metal1} \

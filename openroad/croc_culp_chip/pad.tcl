@@ -31,6 +31,8 @@
 #
 # pad pitch (min)            90.0     90.0
 
+# make_fake_io_site -name GF_IO_Site -width 1 -height 350
+# make_fake_io_site -name GF_Cor_Site -width 1 -height 355
 
 make_io_sites -horizontal_site GF_IO_Site \
     -vertical_site GF_IO_Site \
@@ -159,6 +161,10 @@ connect_by_abutment
 # tells OpenROAD which IO-Cell pin is the pad and places the IO-terminal
 # (the internal concept of an IO) ontop of this pin
 place_io_terminals pad_*/PAD
+# place_io_terminals pad_*/DVDD
+# place_io_terminals pad_*/DVSS
+# place_io_terminals pad_*/VDD
+# place_io_terminals pad_*/VSS
 
 # Bondpad as seperate cell placed in OpenROAD:
 # place the bonding pad relative to the IO cell

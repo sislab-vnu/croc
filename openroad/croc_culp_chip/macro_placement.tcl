@@ -1,1 +1,1 @@
-place_macro -macro_name {i_croc_soc} -location {385 670} -orientation R0
+place_macro -macro_name {i_croc_soc} -location {373.02 720.98} -orientation R0

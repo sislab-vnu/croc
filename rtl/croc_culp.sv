@@ -3,8 +3,10 @@
 // SPDX-License-Identifier: SHL-0.51
 //
 // Authors:
-// - Philippe Sauter <phsauter@iis.ee.ethz.ch>
-
+// - Duy-Hieu Bui <hieubd@vnu.edu.vn>
+`ifdef CROC_CULP_BLACKBOX
+(* blackbox *)
+`endif
 module croc_culp (
   input wire  clk_i,
   input wire  rst_ni,
@@ -71,6 +73,7 @@ module croc_culp (
   output wire  gpio14_en_o,
   output wire  gpio15_en_o
 ); 
+`ifndef CROC_CULP_BLACKBOX
     localparam int unsigned GpioCount = 16;
 
     logic [GpioCount-1:0] soc_gpio_i;
@@ -139,5 +142,5 @@ module croc_culp (
     .gpio_o         ( soc_gpio_o        ),
     .gpio_out_en_o  ( soc_gpio_out_en_o )
   );
-
+`endif
 endmodule

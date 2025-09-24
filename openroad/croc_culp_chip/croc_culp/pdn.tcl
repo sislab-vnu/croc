@@ -62,7 +62,7 @@ add_pdn_connect -grid {block} \
 # add_pdn_connect -grid {block} \
 #     -layers {Metal4 Metal5}
 
-define_pdn_grid -macro -name macro -starts_with POWER -halo 0 -pins {Metal3}
+define_pdn_grid -macro -name macro -default -starts_with POWER -halo 0
 
 add_pdn_ring -grid {macro} \
    -layer        {Metal2 Metal3} \

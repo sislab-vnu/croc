@@ -13,10 +13,11 @@ module croc_padring (
   input wire  soc_uart_tx_o,
 
   output wire soc_fetch_en_i,
+  output wire soc_osc_clk_i,
   input wire  soc_status_o,
   input wire  soc_pll_clk_o,
-  input wire  soc_tie_h,
-  input wire  soc_tie_l,
+  // input wire  soc_tie_h,
+  // input wire  soc_tie_l,
 
   output wire soc_gpio0_i,
   output wire soc_gpio1_i,
@@ -66,22 +67,22 @@ module croc_padring (
   input wire  soc_gpio13_en_o,
   input wire  soc_gpio14_en_o,
   input wire  soc_gpio15_en_o,
-  input wire  soc_gpio0_ie_o,
-  input wire  soc_gpio1_ie_o,
-  input wire  soc_gpio2_ie_o,
-  input wire  soc_gpio3_ie_o,
-  input wire  soc_gpio4_ie_o,
-  input wire  soc_gpio5_ie_o,
-  input wire  soc_gpio6_ie_o,
-  input wire  soc_gpio7_ie_o,
-  input wire  soc_gpio8_ie_o,
-  input wire  soc_gpio9_ie_o,
-  input wire  soc_gpio10_ie_o,
-  input wire  soc_gpio11_ie_o,
-  input wire  soc_gpio12_ie_o,
-  input wire  soc_gpio13_ie_o,
-  input wire  soc_gpio14_ie_o,
-  input wire  soc_gpio15_ie_o,
+  // input wire  soc_gpio0_ie_o,
+  // input wire  soc_gpio1_ie_o,
+  // input wire  soc_gpio2_ie_o,
+  // input wire  soc_gpio3_ie_o,
+  // input wire  soc_gpio4_ie_o,
+  // input wire  soc_gpio5_ie_o,
+  // input wire  soc_gpio6_ie_o,
+  // input wire  soc_gpio7_ie_o,
+  // input wire  soc_gpio8_ie_o,
+  // input wire  soc_gpio9_ie_o,
+  // input wire  soc_gpio10_ie_o,
+  // input wire  soc_gpio11_ie_o,
+  // input wire  soc_gpio12_ie_o,
+  // input wire  soc_gpio13_ie_o,
+  // input wire  soc_gpio14_ie_o,
+  // input wire  soc_gpio15_ie_o,
   // pad
   input wire  p_clk_i,
   input wire  p_rst_ni,
@@ -117,41 +118,87 @@ module croc_padring (
   inout wire  p_gpio15_io,
 
   // custom IP
-  input wire  p_pll_clk_o,
-  inout wire  dac_outp_o,
-  inout wire  dac_outn_o,
-  inout wire  dac_vbias_i,
-  inout wire  adc_inp_i,
-  inout wire  adc_inn_i       
+  output wire p_pll_clk_o,
+  input wire  p_osc_clk_i,
+  inout wire  p_dac_outp_o,
+  inout wire  p_dac_outn_o,
+  inout wire  p_dac_vbias_i,
+  inout wire  p_adc_inp_i,
+  inout wire  p_adc_inn_i       
 );
-    gf180mcu_fd_io__in_c     pad_clk_i        (.PAD(p_clk_i),        .Y(soc_clk_i), .PU(soc_tie_l), .PD(soc_tie_h));
-    gf180mcu_fd_io__in_c     pad_rst_ni       (.PAD(p_rst_ni),       .Y(soc_rst_ni), .PU(soc_tie_l), .PD(soc_tie_h));
-    gf180mcu_fd_io__in_c     pad_ref_clk_i    (.PAD(p_ref_clk_i),    .Y(soc_ref_clk_i), .PU(soc_tie_l), .PD(soc_tie_h));
+   logic      jtag_tdo_dummy;
+   logic      uart_tx_dummy;
+   logic      status_dummy;
+   logic      pll_clk_dummy;
+   logic      soc_tie_l;
+   
+   wire       soc_gpio0_ie_o;
+   wire       soc_gpio1_ie_o;
+   wire       soc_gpio2_ie_o;
+   wire       soc_gpio3_ie_o;
+   wire       soc_gpio4_ie_o;
+   wire       soc_gpio5_ie_o;
+   wire       soc_gpio6_ie_o;
+   wire       soc_gpio7_ie_o;
+   wire       soc_gpio8_ie_o;
+   wire       soc_gpio9_ie_o;
+   wire       soc_gpio10_ie_o;
+   wire       soc_gpio11_ie_o;
+   wire       soc_gpio12_ie_o;
+   wire       soc_gpio13_ie_o;
+   wire       soc_gpio14_ie_o;
+   wire       soc_gpio15_ie_o;
+
+   assign soc_tie_l = 1'b0;
+   assign soc_tie_h = 1'b1;
+   assign soc_gpio0_ie_o = ~soc_gpio0_en_o;
+   assign soc_gpio1_ie_o = ~soc_gpio1_en_o;
+   assign soc_gpio2_ie_o = ~soc_gpio2_en_o;
+   assign soc_gpio3_ie_o = ~soc_gpio3_en_o;
+   assign soc_gpio4_ie_o = ~soc_gpio4_en_o;
+   assign soc_gpio5_ie_o = ~soc_gpio5_en_o;
+   assign soc_gpio6_ie_o = ~soc_gpio6_en_o;
+   assign soc_gpio7_ie_o = ~soc_gpio7_en_o;
+   assign soc_gpio8_ie_o = ~soc_gpio8_en_o;
+   assign soc_gpio9_ie_o = ~soc_gpio9_en_o;
+   assign soc_gpio10_ie_o = ~soc_gpio10_en_o;
+   assign soc_gpio11_ie_o = ~soc_gpio11_en_o;
+   assign soc_gpio12_ie_o = ~soc_gpio12_en_o;
+   assign soc_gpio13_ie_o = ~soc_gpio13_en_o;
+   assign soc_gpio14_ie_o = ~soc_gpio14_en_o;
+   assign soc_gpio15_ie_o = ~soc_gpio15_en_o;
+   
+    gf180mcu_fd_io__in_c     pad_clk_i        (.PAD(p_clk_i),        .Y(soc_clk_i),        .PU(soc_tie_l), .PD(soc_tie_h));
+    gf180mcu_fd_io__in_c     pad_rst_ni       (.PAD(p_rst_ni),       .Y(soc_rst_ni),       .PU(soc_tie_l), .PD(soc_tie_h));
+    gf180mcu_fd_io__in_c     pad_ref_clk_i    (.PAD(p_ref_clk_i),    .Y(soc_ref_clk_i),    .PU(soc_tie_l), .PD(soc_tie_h));
   
-    gf180mcu_fd_io__in_c     pad_jtag_tck_i   (.PAD(p_jtag_tck_i),   .Y(soc_jtag_tck_i), .PU(soc_tie_l), .PD(soc_tie_h));
+    gf180mcu_fd_io__in_c     pad_jtag_tck_i   (.PAD(p_jtag_tck_i),   .Y(soc_jtag_tck_i),   .PU(soc_tie_l), .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_jtag_trst_ni (.PAD(p_jtag_trst_ni), .Y(soc_jtag_trst_ni), .PU(soc_tie_l), .PD(soc_tie_h));
-    gf180mcu_fd_io__in_c     pad_jtag_tms_i   (.PAD(p_jtag_tms_i),   .Y(soc_jtag_tms_i), .PU(soc_tie_l), .PD(soc_tie_h));
-    gf180mcu_fd_io__in_c     pad_jtag_tdi_i   (.PAD(p_jtag_tdi_i),   .Y(soc_jtag_tdi_i), .PU(soc_tie_l), .PD(soc_tie_h));
-    gf180mcu_fd_io__bi_t   pad_jtag_tdo_o   (.PAD(p_jtag_tdo_o),   .A(soc_jtag_tdo_o), .CS(soc_tie_l),
-					       .SL(soc_tie_l), .IE(soc_tie_l), .OE(soc_tie_h), .PU(soc_tie_l), .PD(soc_tie_l), .Y());
-    gf180mcu_fd_io__in_c     pad_uart_rx_i    (.PAD(p_uart_rx_i),    .Y(soc_uart_rx_i), .PU(soc_tie_h), .PD(soc_tie_l));
-    gf180mcu_fd_io__bi_t   pad_uart_tx_o    (.PAD(p_uart_tx_o),    .A(soc_uart_tx_o), .OE(soc_tie_h),
-					       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_h), .PD(soc_tie_l), .Y());
+    gf180mcu_fd_io__in_c     pad_jtag_tms_i   (.PAD(p_jtag_tms_i),   .Y(soc_jtag_tms_i),   .PU(soc_tie_l), .PD(soc_tie_h));
+    gf180mcu_fd_io__in_c     pad_jtag_tdi_i   (.PAD(p_jtag_tdi_i),   .Y(soc_jtag_tdi_i),   .PU(soc_tie_l), .PD(soc_tie_h));
 
-    gf180mcu_fd_io__in_c  pad_fetch_en_i   (.PAD(p_fetch_en_i),   .Y(soc_fetch_en_i));
-    gf180mcu_fd_io__bi_t pad_status_o     (.PAD(p_status_o),     .A(soc_status_o), .OE(soc_tie_h),
-					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l),
-					    .PD(soc_tie_h), .Y());
- `define GPIO_PAD (instname, pad, c2p, p2c, c2p_en) \
-   gf180mcu_fd_io__bi_t p_``instname``     (.PAD(pad), .A(c2p), .Y(p2c) .OE(c2p_en), \
-					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(~c2p_en), .PU(soc_tie_l), \
-					    .PD(soc_tie_h));
+    gf180mcu_fd_io__bi_t     pad_jtag_tdo_o   (.PAD(p_jtag_tdo_o),   .A(soc_jtag_tdo_o),   .CS(soc_tie_l),
+					       .SL(soc_tie_l),       .IE(soc_tie_l),       .OE(soc_tie_h),
+					       .PU(soc_tie_l),       .PD(soc_tie_h),       .Y(tdo_dummy));
 
- `define OUTPUT_PAD (id, pad, c2p) \
-   gf180mcu_fd_io__bi_t pad_gpio_``id``     (.PAD(pad), .A(c2p), .Y() .OE(soc_tie_h), \
-					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l), \
-					    .PD(soc_tie_h));
+    gf180mcu_fd_io__in_c     pad_uart_rx_i    (.PAD(p_uart_rx_i),    .Y(soc_uart_rx_i),    .PU(soc_tie_h), .PD(soc_tie_l));
+    gf180mcu_fd_io__bi_t     pad_uart_tx_o    (.PAD(p_uart_tx_o),    .A(soc_uart_tx_o),    .OE(soc_tie_h),
+					       .CS(soc_tie_l),       .SL(soc_tie_l),       .IE(soc_tie_l), .PU(soc_tie_h), .PD(soc_tie_l), .Y(uart_tx_dummy));
 
+    gf180mcu_fd_io__in_c     pad_fetch_en_i   (.PAD(p_fetch_en_i),   .Y(soc_fetch_en_i));
+    gf180mcu_fd_io__bi_t     pad_status_o     (.PAD(p_status_o),     .A(soc_status_o), .OE(soc_tie_h),
+					       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l),
+					       .PD(soc_tie_h), .Y(status_dummy));
+ // `define GPIO_PAD (instname, pad, c2p, p2c, c2p_en) \
+ //   gf180mcu_fd_io__bi_t p_``instname``     (.PAD(pad), .A(c2p), .Y(p2c) .OE(c2p_en), \
+ // 					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(~c2p_en), .PU(soc_tie_l), \
+ // 					    .PD(soc_tie_h));
+
+ // `define OUTPUT_PAD (id, pad, c2p) \
+ //   gf180mcu_fd_io__bi_t pad_gpio_``id``     (.PAD(pad), .A(c2p), .Y() .OE(soc_tie_h), \
+ // 					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l), \
+ // 					    .PD(soc_tie_h));
+  
    gf180mcu_fd_io__bi_t pad_gpio0_io (.PAD(gpio0_io), .A(soc_gpio0_o), .Y(soc_gpio0_i), .OE(soc_gpio0_en_o), 
 					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(~soc_gpio0_ie_o), .PU(soc_tie_l), 
 					    .PD(soc_tie_h));
@@ -234,12 +281,16 @@ module croc_padring (
    (* dont_touch = "true" *)
     gf180mcu_fd_io__bi_t pad_pll_clk_o     (.PAD(p_pll_clk_o),     .A(soc_pll_clk_o), .OE(soc_tie_h),
 					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l),
-					    .PD(soc_tie_h), .Y());
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outp_o (.ASIG5V(dac_outp_o));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outn_o (.ASIG5V(dac_outn_o));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_vbias_i (.ASIG5V(dac_vbias_i));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inp_i (.ASIG5V(adc_inp_i));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inn_i (.ASIG5V(adc_inn_i));
+					    .PD(soc_tie_h), .Y(pll_clk_dummy));
+   
+   (* dont_touch = "true" *)
+   gf180mcu_fd_io__in_c     pad_osc_clk_i        (.PAD(p_osc_clk_i),        .Y(soc_osc_clk_i),        .PU(soc_tie_l), .PD(soc_tie_h));
+
+   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outp_o (.ASIG5V(p_dac_outp_o));
+   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outn_o (.ASIG5V(p_dac_outn_o));
+   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_vbias_i (.ASIG5V(p_dac_vbias_i));
+   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inp_i (.ASIG5V(p_adc_inp_i));
+   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inn_i (.ASIG5V(p_adc_inn_i));
    
     (* dont_touch = "true" *)gf180mcu_fd_io__dvdd pad_vdd0();
     (* dont_touch = "true" *)gf180mcu_fd_io__dvdd pad_vdd1();

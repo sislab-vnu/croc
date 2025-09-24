@@ -1,0 +1,13 @@
+VERSION 5.7 ;
+
+SITE GF_IO_Site
+    CLASS PAD ;
+    SYMMETRY R90 ;
+    SIZE 1.00 BY 350.00 ;
+END GF_IO_Site
+SITE GF_Cor_Site
+    CLASS PAD ;
+    SYMMETRY R90 ;
+    SIZE 355.00 BY 355.00 ;
+END GF_Cor_Site
+
