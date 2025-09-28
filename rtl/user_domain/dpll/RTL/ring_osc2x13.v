@@ -18,7 +18,6 @@
 //
 // NOTE:  This netlist cannot be simulated correctly due to lack
 // of accurate timing in the digital cell verilog models.
-
 module delay_stage(in, trim, out);
     input in;
     input [1:0] trim;
@@ -158,10 +157,17 @@ endmodule
 // Frequency of this ring oscillator under SPICE simulations at
 // nominal PVT is maximum 214 MHz (trim 0), minimum 90 MHz (trim 24).
 
-module ring_osc2x13(reset, trim, clockp);
+`ifdef CROC_CULP_BLACKBOX
+(* blackbox *)
+`endif
+module ring_osc2x13(reset, enable, dco, ext_trim, trim, clockp);
     input reset;
+    input enable;
+    input dco;
+    input [25:0] ext_trim;
     input [25:0] trim;
     output[1:0] clockp;
+`ifndef CROC_CULP_BLACKBOX
 
 `ifdef FUNCTIONAL	// i.e., behavioral model below
 
@@ -170,7 +176,7 @@ module ring_osc2x13(reset, trim, clockp);
     integer i;
     real delay;
     wire [5:0] bcount;
-
+	
     assign bcount = trim[0] + trim[1] + trim[2]
 		+ trim[3] + trim[4] + trim[5] + trim[6] + trim[7]
 		+ trim[8] + trim[9] + trim[10] + trim[11] + trim[12]
@@ -192,21 +198,21 @@ module ring_osc2x13(reset, trim, clockp);
 	hiclock <= (hiclock === 1'b0);
     end
 
-    always @(trim) begin
+    always @(itrim) begin
     	// Implement trim as a variable delay, one delay per trim bit
 	delay = 1.168 + 0.012 * $itor(bcount);
     end
 
-    always @(posedge hiclock or posedge reset) begin
-	if (reset == 1'b1) begin
+    always @(posedge hiclock or posedge ireset) begin
+	if (ireset == 1'b1) begin
 	    clockp[0] <= 1'b0;
 	end else begin
 	    clockp[0] <= (clockp[0] === 1'b0);
 	end
     end
 
-    always @(negedge hiclock or posedge reset) begin
-	if (reset == 1'b1) begin
+    always @(negedge hiclock or posedge ireset) begin
+	if (ireset == 1'b1) begin
 	    clockp[1] <= 1'b0;
 	end else begin
 	    clockp[1] <= (clockp[1] === 1'b0);
@@ -218,7 +224,11 @@ module ring_osc2x13(reset, trim, clockp);
     wire [1:0] clockp;
     wire [12:0] d;
     wire [1:0] c;
-
+    wire ireset;
+    wire [25:0] itrim;
+    assign ireset = ~reset | ~enable;
+    
+    assign itrim = (dco == 1'b0) ? trim : ext_trim;
     // Main oscillator loop stages
  
     genvar i;
@@ -226,7 +236,7 @@ module ring_osc2x13(reset, trim, clockp);
 	for (i = 0; i < 12; i = i + 1) begin : dstage
 	    delay_stage id (
 		.in(d[i]),
-		.trim({trim[i+13], trim[i]}),
+		.trim({itrim[i+13],itrim[i]}),
 		.out(d[i+1])
 	    );
 	end
@@ -236,8 +246,8 @@ module ring_osc2x13(reset, trim, clockp);
  
     start_stage iss (
 	.in(d[12]),
-	.trim({trim[25], trim[12]}),
-	.reset(reset),
+	.trim({itrim[25], itrim[12]}),
+	.reset(ireset),
 	.out(d[0])
     );
 
@@ -261,6 +271,6 @@ module ring_osc2x13(reset, trim, clockp);
     );
 
 `endif // !FUNCTIONAL
-
+`endif
 endmodule
 `default_nettype wire

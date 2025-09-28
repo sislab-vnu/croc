@@ -16,6 +16,7 @@ package obi_dpll_pkg;
 
   typedef struct packed {
      logic 	 en;
+     logic       rst_n;
      logic 	 dco;
      logic [4:0] div;
      logic [26:0] extrim;

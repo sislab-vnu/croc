@@ -17,11 +17,6 @@
 // Digital PLL (ring oscillator + controller)
 // Technically this is a frequency locked loop, not a phase locked loop.
 
-`ifndef SIM
-`include "digital_pll_controller.v"
-`include "ring_osc2x13.v"
-`endif
-
 module digital_pll(
 `ifdef USE_POWER_PINS
     VDD,
@@ -43,29 +38,30 @@ module digital_pll(
 
     output [1:0] clockp;	// Two 90 degree clock phases
 
-    wire [25:0]  itrim;		// Internally generated trim bits
-    wire [25:0]  otrim;		// Trim bits applied to the ring oscillator
-    wire	 creset;	// Controller reset
-    wire	 ireset;	// Internal reset (external reset OR disable)
+    wire [25:0] otrim;		// Trim bits from controller
 
-    assign ireset = ~resetb | ~enable;
-
-    // In DCO mode: Hold controller in reset and apply external trim value
-
-    assign itrim = (dco == 1'b0) ? otrim : ext_trim;
-    assign creset = (dco == 1'b0) ? ireset : 1'b1;
-
+   `ifdef CROC_CULP_BLACKBOX
+   (* dont_touch = "true" *)
+   `endif
     ring_osc2x13 ringosc (
-        .reset(ireset),
-        .trim(itrim),
+        .reset(resetb),
+        .enable(enable),
+        .dco(dco),
+        .ext_trim(ext_trim),
+        .trim(otrim),
         .clockp(clockp)
     );
 
+   `ifdef CROC_CULP_BLACKBOX
+   (* dont_touch = "true" *)
+   `endif
     digital_pll_controller pll_control (
-        .reset(creset),
+        .reset(resetb),
+        .enable(enable),
         .clock(clockp[0]),
         .osc(osc),
         .div(div),
+        .dco(dco),
         .trim(otrim)
     );
 

@@ -83,6 +83,7 @@ module obi_dpll_register import obi_dpll_pkg::*; #(
   // bits in register organized together to ease read/write
   typedef struct packed {
      logic 	 en;         // Direction register
+     logic 	 rst_n;
      logic 	 dco;
      logic [4:0] div;        // Input register
      logic [26:0] extrim;    // Interrupt edge sensitivity register
@@ -104,6 +105,7 @@ module obi_dpll_register import obi_dpll_pkg::*; #(
      reg2hw.div         = reg_q.div;
      reg2hw.dco         = reg_q.dco;
      reg2hw.extrim      = reg_q.extrim;
+     reg2hw.rst_n       = reg_q.rst_n;
   end
 
   // update registers
@@ -128,6 +130,7 @@ module obi_dpll_register import obi_dpll_pkg::*; #(
       case ({write_addr, 2'b00})
         DPLL_CFG_OFFSET: begin
            reg_d.div = obi_wdata[4:0];
+	   reg_d.rst_n = obi_wdata[5];
 	   reg_d.en = obi_wdata[7];
 	   reg_d.dco = obi_wdata[6];
         end
@@ -150,6 +153,7 @@ module obi_dpll_register import obi_dpll_pkg::*; #(
       case ({read_addr_q, 2'b00})
         DPLL_CFG_OFFSET: begin
            obi_rdata[4:0] = reg_q.div;
+	   obi_rdata[5] = reg_q.rst_n;
 	   obi_rdata[7] = reg_q.en;
 	   obi_rdata[6] = reg_q.dco;
         end

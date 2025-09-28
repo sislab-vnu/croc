@@ -16,17 +16,19 @@ module obi_dpll #(
   /// OBI response type
   parameter type obi_rsp_t = logic
 ) (
-  input logic 	     clk_i, // Primary input clock
-  input logic 	     rst_ni, // Asynchronous active-low reset
+  input logic 	      clk_i, // Primary input clock
+  input logic 	      rst_ni, // Asynchronous active-low reset
 
   // OBI request interface
-  input 	     obi_req_t obi_req_i, // a.addr, a.we, a.be, a.wdata, a.aid, a.a_optional | rready, req
+  input 	      obi_req_t obi_req_i, // a.addr, a.we, a.be, a.wdata, a.aid, a.a_optional | rready, req
   // OBI response interface
-  output 	     obi_rsp_t obi_rsp_o, // r.rdata, r.rid, r.err, r.r_optional | gnt, rvalid
+  output 	      obi_rsp_t obi_rsp_o, // r.rdata, r.rid, r.err, r.r_optional | gnt, rvalid
 
-  output logic 	     irq_o, // Interrupt line
-  output logic 	     irq_no, // Negated Interrupt line
-  output logic [7:0] dpll_cfg
+  output logic 	      dpll_en_o, // Interrupt line
+  output logic 	      dpll_dco_o, // Negated Interrupt line
+  output logic 	      dpll_rstn_o, // Negated Interrupt line
+  output logic [4:0]  dpll_div_o, // Negated Interrupt line
+  output logic [26:0] dpll_extrim_o
 );
   // Import the UART package for definitions and parameters
   import obi_dpll_pkg::*;
@@ -51,5 +53,11 @@ module obi_dpll #(
     .reg2hw  (reg_w),
     .hw2reg (reg_r)
   );
+
+   assign dpll_en_o = reg_w.en;
+   assign dpll_dco_o = reg_w.dco;
+   assign dpll_rstn_o = reg_w.rst_n;
+   assign dpll_div_o = reg_w.div;
+   assign dpll_extrim_o = reg_w.extrim;
 
 endmodule

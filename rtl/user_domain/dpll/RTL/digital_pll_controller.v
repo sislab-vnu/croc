@@ -45,14 +45,22 @@
 //    clock is too fast, so increase the trim code.  If the sum
 //    is equal to div, the the trim code does not change.
 //
-
-module digital_pll_controller(reset, clock, osc, div, trim);
+`ifdef CROC_CULP_BLACKBOX
+(* blackbox *)
+`endif
+module digital_pll_controller(reset, enable, clock, osc, div, dco, trim);
     input reset;
+	input enable;
     input clock;
     input osc;
+	input dco;
     input [4:0] div;
-    output [25:0] trim;		// Use ring_osc2x13, with 26 trim bits
+    output [25:0] trim;	// Use ring_osc2x13, with 26 trim bits
 
+`ifndef CROC_CULP_BLACKBOX
+
+	wire creset;
+	wire ireset;
     wire [25:0] trim;
     reg [2:0] oscbuf;
     reg [2:0] prep;
@@ -65,7 +73,10 @@ module digital_pll_controller(reset, clock, osc, div, trim);
     wire [5:0] sum;
 
     assign sum = count0 + count1;
- 
+	
+	assign ireset = ~reset | ~enable;
+    assign creset = (dco == 1'b0) ? ireset : 1'b1;
+	
     // Integer to thermometer code (maybe there's an algorithmic way?)
     assign tint = tval[6:2];
                                      // |<--second-->|<-- first-->|
@@ -97,8 +108,8 @@ module digital_pll_controller(reset, clock, osc, div, trim);
           (tint == 5'd25) ? 26'b1111101111111_1111111111111 :
                     26'b1111111111111_1111111111111;
    
-    always @(posedge clock or posedge reset) begin
-    if (reset == 1'b1) begin
+    always @(posedge clock or posedge creset) begin
+    if (creset == 1'b1) begin
         tval <= 7'd0;	// Note:  trim[0] must be zero for startup to work.
         oscbuf <= 3'd0;
         prep <= 3'd0;
@@ -130,7 +141,7 @@ module digital_pll_controller(reset, clock, osc, div, trim);
         end
         end
     end
-    end
-
+    end // always @ (posedge clock or posedge creset)
+`endif
 endmodule	// digital_pll_controller
 `default_nettype wire
