@@ -44,7 +44,8 @@ add_pdn_stripe -grid {block} \
     -spacing {0.56} \
     -pitch {44.8} \
     -extend_to_core_ring \
-    -offset {22.4}
+    -offset {22.4} \
+    -snap_to_grid
 
 # add_pdn_stripe -grid {block} \
 #     -layer {Metal5} \
@@ -69,7 +70,6 @@ add_pdn_ring -grid {macro} \
    -widths       "3 3" \
     -spacings     "0.56 0.56" \
     -core_offsets "1 1" \
-    -connect_to_pads \
     -add_connect
 
 add_pdn_stripe \
@@ -81,7 +81,8 @@ add_pdn_stripe \
     -spacing 1 \
     -number_of_straps 1 \
     -starts_with POWER \
-    -extend_to_core_ring
+    -extend_to_core_ring \
+    -snap_to_grid
 
 add_pdn_stripe \
     -grid macro \
@@ -92,7 +93,8 @@ add_pdn_stripe \
     -spacing 1 \
     -number_of_straps 1 \
     -starts_with POWER \
-    -extend_to_core_ring
+    -extend_to_core_ring \
+    -snap_to_grid
 
 add_pdn_connect \
     -grid macro \

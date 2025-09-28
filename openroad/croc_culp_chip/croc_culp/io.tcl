@@ -1,3 +1,5 @@
+exclude_io_pin_region -region bottom:1116-2935 -region top:2300-2580 -region right:0-1054
+
 set_io_pin_constraint -pin_names { \
 				       uart_rx_i uart_tx_o fetch_en_i \
 				       status_o clk_i ref_clk_i rst_ni \
@@ -7,25 +9,30 @@ set_io_pin_constraint -pin_names { \
     -group -order -region left:*
 
 set_io_pin_constraint -pin_names { \
-				       gpio15_i gpio15_en_o gpio15_o \
-				       gpio14_i gpio14_en_o gpio14_o \
-				       gpio13_i gpio13_en_o gpio13_o \
-				       gpio12_i gpio12_en_o gpio12_o
-				       gpio11_i gpio11_en_o gpio11_o \
+				       gpio_i[15] gpio_en_o[15] gpio_o[15] \
+				       gpio_i[14] gpio_en_o[14] gpio_o[14] \
+				       gpio_i[13] gpio_en_o[13] gpio_o[13] \
+				       gpio_i[12] gpio_en_o[12] gpio_o[12] \
 } \
-    -group -order -region top:*
+    -region top:*
 
 set_io_pin_constraint -pin_names { \
-				       gpio10_i gpio10_en_o gpio10_o \
-				       gpio9_i  gpio9_en_o  gpio9_o \
-				       gpio8_i  gpio8_en_o  gpio8_o \
-				       gpio7_i  gpio7_en_o  gpio7_o \
-				       gpio6_i  gpio6_en_o  gpio6_o \
-				       gpio5_i  gpio5_en_o  gpio5_o \
-				       gpio4_i  gpio4_en_o  gpio4_o \
-				       gpio3_i  gpio3_en_o  gpio3_o \
-				       gpio2_i  gpio2_en_o  gpio2_o \
-				       gpio1_i  gpio1_en_o  gpio1_o \
-				       gpio0_i  gpio0_en_o  gpio0_o \
+				       gpio_i[0] gpio_en_o[0] gpio_o[0] \
+				       gpio_i[1] gpio_en_o[1] gpio_o[1] \
+				       gpio_i[2] gpio_en_o[2] gpio_o[2] \
+				       gpio_i[3] gpio_en_o[3] gpio_o[3] \
+				       gpio_i[4] gpio_en_o[4] gpio_o[4] \
+				       gpio_i[5] gpio_en_o[5] gpio_o[5] \
+				       gpio_i[6] gpio_en_o[6] gpio_o[6] \
+				       gpio_i[7] gpio_en_o[7] gpio_o[7] \
+				       gpio_i[8] gpio_en_o[8] gpio_o[8] \
+				       gpio_i[9] gpio_en_o[9] gpio_o[9] \
+				       gpio_i[10] gpio_en_o[10] gpio_o[10] \
+				       gpio_i[11] gpio_en_o[11] gpio_o[11] \
 				   } \
-    -group -order -region right:*
+    -region right:*
+
+set_io_pin_constraint -pin_names { \
+				       dpll_*
+				   } \
+    -region bottom:*
