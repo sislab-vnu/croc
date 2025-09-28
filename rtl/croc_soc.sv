@@ -8,24 +8,34 @@
 module croc_soc import croc_pkg::*; #(
   parameter int unsigned GpioCount = 16
 ) (
-  input  logic clk_i,
-  input  logic rst_ni,
-  input  logic ref_clk_i,
-  input  logic testmode_i,
-  input  logic fetch_en_i,
-  output logic status_o,
+  input logic 		       clk_i,
+  input logic 		       rst_ni,
+  input logic 		       ref_clk_i,
+  input logic 		       testmode_i,
+  input logic 		       fetch_en_i,
+  output logic 		       status_o,
+// `ifdef ENABLE_CD_DAC
+//   output logic 		       dac_clk_o,
+//   output logic [9:0] 	       dac_val_o,
+// `endif
 
-  input  logic jtag_tck_i,
-  input  logic jtag_tdi_i,
-  output logic jtag_tdo_o,
-  input  logic jtag_tms_i,
-  input  logic jtag_trst_ni,
+  output logic 		       dpll_en_o,
+  output logic 		       dpll_dco_o,
+  output logic 		       dpll_rstn_o,
+  output logic [4:0] 	       dpll_div_o,
+  output logic [26:0] 	       dpll_extrim_o,
 
-  input  logic uart_rx_i,
-  output logic uart_tx_o,
+  input logic 		       jtag_tck_i,
+  input logic 		       jtag_tdi_i,
+  output logic 		       jtag_tdo_o,
+  input logic 		       jtag_tms_i,
+  input logic 		       jtag_trst_ni,
 
-  input  logic [GpioCount-1:0] gpio_i,       // Input from GPIO pins
-  output logic [GpioCount-1:0] gpio_o,       // Output to GPIO pins
+  input logic 		       uart_rx_i,
+  output logic 		       uart_tx_o,
+
+  input logic [GpioCount-1:0]  gpio_i, // Input from GPIO pins
+  output logic [GpioCount-1:0] gpio_o, // Output to GPIO pins
   output logic [GpioCount-1:0] gpio_out_en_o // Output enable signal; 0 -> input, 1 -> output
 );
 
@@ -101,6 +111,16 @@ user_domain #(
   .rst_ni ( synced_rst_n ),
   .ref_clk_i,
   .testmode_i,
+  .dpll_en_o (dpll_en_o),
+  .dpll_rstn_o (dpll_rstn_o),
+  .dpll_div_o (dpll_div_o),
+  .dpll_dco_o (dpll_dco_o),
+  .dpll_extrim_o (dpll_extrim_o),
+
+// `ifdef ENABLE_CD_DAC
+//   .dac_val_o (dac_val_o),
+//   .dac_clk_o (dac_clk_o),
+// `endif
 
   .user_sbr_obi_req_i ( user_sbr_obi_req ),
   .user_sbr_obi_rsp_o ( user_sbr_obi_rsp ),

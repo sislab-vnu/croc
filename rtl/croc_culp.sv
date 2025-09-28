@@ -24,99 +24,27 @@ module croc_culp (
   input wire  fetch_en_i,
   output wire status_o,
 
-  input wire  gpio0_i,
-  input wire  gpio1_i,
-  input wire  gpio2_i,
-  input wire  gpio3_i,
-  input wire  gpio4_i,
-  input wire  gpio5_i,
-  input wire  gpio6_i,
-  input wire  gpio7_i,
-  input wire  gpio8_i,
-  input wire  gpio9_i,
-  input wire  gpio10_i,
-  input wire  gpio11_i,
-  input wire  gpio12_i,
-  input wire  gpio13_i,
-  input wire  gpio14_i,
-  input wire  gpio15_i,
-  output wire  gpio0_o,
-  output wire  gpio1_o,
-  output wire  gpio2_o,
-  output wire  gpio3_o,
-  output wire  gpio4_o,
-  output wire  gpio5_o,
-  output wire  gpio6_o,
-  output wire  gpio7_o,
-  output wire  gpio8_o,
-  output wire  gpio9_o,
-  output wire  gpio10_o,
-  output wire  gpio11_o,
-  output wire  gpio12_o,
-  output wire  gpio13_o,
-  output wire  gpio14_o,
-  output wire  gpio15_o,
-  output wire  gpio0_en_o,
-  output wire  gpio1_en_o,
-  output wire  gpio2_en_o,
-  output wire  gpio3_en_o,
-  output wire  gpio4_en_o,
-  output wire  gpio5_en_o,
-  output wire  gpio6_en_o,
-  output wire  gpio7_en_o,
-  output wire  gpio8_en_o,
-  output wire  gpio9_en_o,
-  output wire  gpio10_en_o,
-  output wire  gpio11_en_o,
-  output wire  gpio12_en_o,
-  output wire  gpio13_en_o,
-  output wire  gpio14_en_o,
-  output wire  gpio15_en_o
+`ifdef ENABLE_CS_DAC
+  //dac interface
+  output wire dac_clk_o,
+  output wire [9:0] dac_val_o,
+`endif
+
+  input wire  [15:0] gpio_i,
+  output wire [15:0] gpio_o,
+  output wire [15:0] gpio_en_o,
+
+  output wire dpll_en_o, 
+  output wire dpll_dco_o, 
+  output wire dpll_rstn_o,
+  output wire [4:0] dpll_div_o, 
+  output wire [25:0] dpll_extrim_o
 ); 
 `ifndef CROC_CULP_BLACKBOX
+
     localparam int unsigned GpioCount = 16;
 
-    logic [GpioCount-1:0] soc_gpio_i;
-    logic [GpioCount-1:0] soc_gpio_o;
     logic [GpioCount-1:0] soc_gpio_out_en_o; // Output enable signal; 0 -> input, 1 -> output
-
-   assign soc_gpio_i = {gpio15_i, gpio14_i, gpio13_i, gpio12_i,
-			gpio11_i, gpio10_i, gpio9_i, gpio8_i,
-			gpio7_i, gpio6_i, gpio5_i, gpio4_i,
-			gpio3_i, gpio2_i, gpio1_i, gpio0_i};
-   assign gpio15_o = soc_gpio_o[15];
-   assign gpio14_o = soc_gpio_o[14];
-   assign gpio13_o = soc_gpio_o[13];
-   assign gpio12_o = soc_gpio_o[12];
-   assign gpio11_o = soc_gpio_o[11];
-   assign gpio10_o = soc_gpio_o[10];
-   assign gpio9_o = soc_gpio_o[9];
-   assign gpio8_o = soc_gpio_o[8];
-   assign gpio7_o = soc_gpio_o[7];
-   assign gpio6_o = soc_gpio_o[6];
-   assign gpio5_o = soc_gpio_o[5];
-   assign gpio4_o = soc_gpio_o[4];
-   assign gpio3_o = soc_gpio_o[3];
-   assign gpio2_o = soc_gpio_o[2];
-   assign gpio1_o = soc_gpio_o[1];
-   assign gpio0_o = soc_gpio_o[0];
-   assign gpio15_en_o = soc_gpio_out_en_o[15];
-   assign gpio14_en_o = soc_gpio_out_en_o[14];
-   assign gpio13_en_o = soc_gpio_out_en_o[13];
-   assign gpio12_en_o = soc_gpio_out_en_o[12];
-   assign gpio11_en_o = soc_gpio_out_en_o[11];
-   assign gpio10_en_o = soc_gpio_out_en_o[10];
-   assign gpio9_en_o = soc_gpio_out_en_o[9];
-   assign gpio8_en_o = soc_gpio_out_en_o[8];
-   assign gpio7_en_o = soc_gpio_out_en_o[7];
-   assign gpio6_en_o = soc_gpio_out_en_o[6];
-   assign gpio5_en_o = soc_gpio_out_en_o[5];
-   assign gpio4_en_o = soc_gpio_out_en_o[4];
-   assign gpio3_en_o = soc_gpio_out_en_o[3];
-   assign gpio2_en_o = soc_gpio_out_en_o[2];
-   assign gpio1_en_o = soc_gpio_out_en_o[1];
-   assign gpio0_en_o = soc_gpio_out_en_o[0];
-
    
   croc_soc #(
     .GpioCount( GpioCount )
@@ -138,9 +66,18 @@ module croc_culp (
     .uart_rx_i      ( uart_rx_i ),
     .uart_tx_o      ( uart_tx_o ),
 
-    .gpio_i         ( soc_gpio_i        ),
-    .gpio_o         ( soc_gpio_o        ),
-    .gpio_out_en_o  ( soc_gpio_out_en_o )
+    .dpll_en_o		( dpll_en_o	),
+    .dpll_rstn_o	( dpll_rstn_o	),
+    .dpll_dco_o		( dpll_dco_o	),
+    .dpll_div_o		( dpll_div_o	),
+    .dpll_extrim_o	( dpll_extrim_o	),
+// `ifdef ENABLE_CS_DAC
+//     .dac_val_o	( dac_val_o	),
+//     .dac_clk_o	( dac_clk_o	),
+// `endif
+    .gpio_i         ( gpio_i        ),
+    .gpio_o         ( gpio_o        ),
+    .gpio_out_en_o  ( gpio_en_o     )
   );
 `endif
 endmodule
