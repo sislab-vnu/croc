@@ -30,9 +30,9 @@ add_pdn_ring -grid {core_grid} \
    -layer        {Metal4 Metal5} \
    -widths       "4.48 4.48" \
    -spacings     "0.56 0.56" \
-   -pad_offsets  "6 6" \
-    -connect_to_pads                    \
-    -connect_to_pad_layers {Metal2 Metal5}
+    -pad_offsets  "6 6" \
+    -connect_to_pads \
+    -connect_to_pad_layers {Metal2 Metal4 Metal5}
 
 add_pdn_stripe -grid {core_grid} \
     -layer {Metal1} \
@@ -48,14 +48,14 @@ add_pdn_stripe -grid {core_grid} \
     -spacing {0.56} \
     -pitch {44.8} \
     -offset {22.4} \
-    -extend_to_core_ring
+    -snap_to_grid
 
 add_pdn_stripe -grid {core_grid} \
     -layer {Metal5} \
     -width {4.480} \
     -pitch {89.6} \
     -offset {44.8} \
-    -extend_to_core_ring
+    -snap_to_grid
 
 add_pdn_connect -grid {core_grid} \
     -layers {Metal1 Metal4} \
@@ -64,8 +64,15 @@ add_pdn_connect -grid {core_grid} \
     -split_cuts {Metal3 0.128}
 
 add_pdn_connect -grid {core_grid} \
-    -layers {Metal4 Metal5}
+    -layers {Metal5 Metal1}
+add_pdn_connect -grid {core_grid} \
+    -layers {Metal5 Metal2}
+add_pdn_connect -grid {core_grid} \
+    -layers {Metal4 Metal2}
+add_pdn_connect -grid {core_grid} \
+    -layers {Metal5 Metal4}
 
-define_pdn_grid -macro -name macro -cells croc_culp -voltage_domains {CORE}
+define_pdn_grid -macro -name macro -default -voltage_domains {CORE}
 add_pdn_connect -grid {macro} -layers {Metal4 Metal5}
+
 pdngen -report_only
