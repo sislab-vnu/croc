@@ -12,8 +12,8 @@ export METAL_OPTION    = 5LM_1TM
 export KVALUE          = 9
 
 export PLATFORM        = gf180
-export CORE_AREA = 15 15 2125 1911
-export DIE_AREA = 0 0 2140 1926
+export CORE_AREA = 15.12 15.68 2125.2 1889.44
+export DIE_AREA = 0 0 2140.32 1905.12
 
 # export PLACE_PINS_ARGS = -min_distance 50.0 -corner_avoidance 50.0
 
@@ -54,9 +54,9 @@ export PDN_TCL = $(DESIGN_NAME)/pdn.tcl
 export IO_CONSTRAINTS = $(DESIGN_NAME)/io.tcl
 export MACRO_PLACEMENT_TCL = $(DESIGN_NAME)/macro_placement.tcl
 
-export CORE_MARGIN       = 2
+export CORE_MARGIN       = 1
 
-export PLACE_DENSITY = 0.5
+export PLACE_DENSITY = 0.45
 export MACRO_PLACE_HALO = 10 10
 
 export CORNERS = slow typ fast

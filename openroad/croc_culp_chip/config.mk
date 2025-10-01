@@ -15,8 +15,8 @@ export SDC_FILE = constraint.sdc
 
 # export SEAL_GDS = $(DESIGN_HOME)/$(PLATFORM)/$(DESIGN_NICKNAME)/sealring.gds.gz
 
-export DIE_AREA = 0.0 0.0 2935.0 2935.0
-export CORE_AREA = 372.24 373.92 2562.72 2562.16
+export DIE_AREA = 0.0 0.0 2934.96 2932.16
+export CORE_AREA = 371.84 372.4 2562.56 2559.76
 
 export MAX_ROUTING_LAYER = Metal5
 
