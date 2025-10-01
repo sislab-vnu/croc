@@ -48,20 +48,20 @@ add_pdn_stripe -grid {core_grid} \
     -spacing {0.56} \
     -pitch {44.8} \
     -offset {22.4} \
-    -snap_to_grid
+    -snap_to_grid \
 
 add_pdn_stripe -grid {core_grid} \
     -layer {Metal5} \
     -width {4.480} \
-    -pitch {89.6} \
-    -offset {44.8} \
-    -snap_to_grid
+    -pitch {86.24} \
+    -offset {43.12} \
+    -snap_to_grid \
+    -extend_to_core_ring
 
 add_pdn_connect -grid {core_grid} \
     -layers {Metal1 Metal4} \
     -max_columns {5} \
-    -ongrid {Metal2 Metal3 Metal4} \
-    -split_cuts {Metal3 0.128}
+    -ongrid {Metal2 Metal3 Metal4}
 
 add_pdn_connect -grid {core_grid} \
     -layers {Metal5 Metal1}
