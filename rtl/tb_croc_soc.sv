@@ -6,6 +6,7 @@
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
 `define TRACE_WAVE
+`define ENABLE_CD_DAC
 
 module tb_croc_soc #(
     parameter time         ClkPeriod     = 50ns,
@@ -35,7 +36,7 @@ module tb_croc_soc #(
 
     logic fetch_en_i;
     logic status_o;
-
+   
     localparam int unsigned GpioCount = 32;
 
     logic [GpioCount-1:0] gpio_i;             
@@ -394,8 +395,11 @@ module tb_croc_soc #(
             end
         end
     end
-
-
+    
+    logic [9:0]  dac_val_o;
+    logic        dac_clk_o;
+    logic [4:0]  dpll_div_o;
+    logic [26:0] dpll_extrim_o;
 
     ////////////
     //  DUT   //
@@ -425,7 +429,19 @@ module tb_croc_soc #(
 
         .gpio_i        ( gpio_i        ),             
         .gpio_o        ( gpio_o        ),            
-        .gpio_out_en_o ( gpio_out_en_o )
+        .gpio_out_en_o ( gpio_out_en_o ),
+
+     `ifdef ENABLE_CD_DAC
+         .dac_clk_o    (dac_clk_o),
+         .dac_val_o    (dac_val_o),
+     `endif
+ 
+        .dpll_en_o     (dpll_en_o),
+        .dpll_dco_o    (dpll_dco_o),
+        .dpll_rstn_o   (dpll_rstn_o),
+        .dpll_div_o    (dpll_div_o),
+        .dpll_extrim_o (dpll_extrim_o)
+
     );
 
     assign gpio_i[ 3:0]          = '0;

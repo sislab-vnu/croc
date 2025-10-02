@@ -66,21 +66,25 @@ sw: $(SW_HEX)
 # RTL Simulation #
 ##################
 # Questasim/Modelsim/vsim
-VLOG_ARGS  = -svinputport=compat
+VLOG_ARGS  = -svinputport=compat 
 VSIM_ARGS  = -t 1ns -voptargs=+acc +notimingchecks +nospecify
 VSIM_ARGS += -suppress vsim-3009 -suppress vsim-8683 -suppress vsim-8386
 
 vsim/compile_rtl.tcl: Bender.lock Bender.yml
-	$(BENDER) script vsim -t rtl -t vsim -t simulation -t verilator -DSYNTHESIS -DSIMULATION  --vlog-arg="$(VLOG_ARGS)" > $@
+	$(BENDER) script vsim -t rtl -t vsim -t simulation -t verilator -DSYNTHESIS -DSIMULATION -DFUNCTIONAL --vlog-arg="$(VLOG_ARGS)" > $@
 
 vsim/compile_netlist.tcl: Bender.lock Bender.yml
 	$(BENDER) script vsim -t $(TECHNO) -t vsim -t simulation -t verilator -t netlist_yosys -DSYNTHESIS -DSIMULATION > $@
 
 ## Simulate RTL using Questasim/Modelsim/vsim
+
 vsim: vsim/compile_rtl.tcl $(SW_HEX)
 	rm -rf vsim/work
-	cd vsim; $(VSIM) -c -do "source compile_rtl.tcl; exit"
-	cd vsim; $(VSIM) +binary="$(realpath $(SW_HEX))" -gui tb_croc_soc $(VSIM_ARGS)
+	cd vsim; $(VSIM) -c -do "source compile_rtl.tcl; exit" > compile.log 2>&1
+	cd vsim; $(VSIM) -gui -wlf wave.wlf work.tb_croc_soc +binary="$(realpath $(SW_HEX))" $(VSIM_ARGS) \
+        -do "add wave -r /*; run -all" \
+	-l run.log
+
 
 ## Simulate netlist using Questasim/Modelsim/vsim
 vsim-yosys: vsim/compile_netlist.tcl $(SW_HEX) yosys/out/croc_chip_yosys_debug.v
@@ -118,7 +122,7 @@ verilator: verilator/obj_dir/Vtb_croc_soc
 ####################
 # Bender manages the different IPs and can be used to generate file-lists for synthesis
 TOP_DESIGN     ?= croc_culp
-DUT_DESIGN	   ?= croc_soc
+DUT_DESIGN     ?= croc_soc
 BENDER_TARGETS ?= asic $(TECHNO) rtl synthesis
 SV_DEFINES     ?= VERILATOR SYNTHESIS COMMON_CELLS_ASSERTS_OFF
 

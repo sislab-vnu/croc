@@ -5,6 +5,8 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
+`define ENABLE_CD_DAC
+
 module user_domain import user_pkg::*; import croc_pkg::*; #(
   parameter int unsigned GpioCount = 16
 ) (
@@ -19,10 +21,10 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   output logic [4:0] 		     dpll_div_o,
   output logic [26:0] 		     dpll_extrim_o,
 
-// `ifdef ENABLE_CS_DAC
-//   output logic 			     dac_val_o,
-//   output logic 			     dac_clk_o,
-// `endif
+ `ifdef ENABLE_CD_DAC
+   output logic [9:0]	             dac_val_o,
+   output logic 	             dac_clk_o,
+ `endif
 
   input 			     sbr_obi_req_t user_sbr_obi_req_i, // User Sbr (rsp_o), Croc Mgr (req_i)
   output 			     sbr_obi_rsp_t user_sbr_obi_rsp_o,
@@ -64,21 +66,21 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   sbr_obi_req_t dpll_obi_req;
   sbr_obi_rsp_t dpll_obi_rsp;
 
-// `ifdef ENABLE_CD_DAC
-//   sbr_obi_req_t dac_obi_req;
-//   sbr_obi_rsp_t dac_obi_rsp;
-// `endif
+ `ifdef ENABLE_CD_DAC
+   sbr_obi_req_t dac_obi_req;
+   sbr_obi_rsp_t dac_obi_rsp;
+ `endif
 
   // Fanout into more readable signals
   assign user_error_obi_req              = all_user_sbr_obi_req[UserError];
   assign all_user_sbr_obi_rsp[UserError] = user_error_obi_rsp;
-  assign dpll_obi_req              = all_user_sbr_obi_req[UserDpll];
-  assign all_user_sbr_obi_rsp[UserDpll] = dpll_obi_rsp;
+  assign dpll_obi_req                    = all_user_sbr_obi_req[UserDpll];
+  assign all_user_sbr_obi_rsp[UserDpll]  = dpll_obi_rsp;
 
-// `ifdef ENABLE_CD_DAC
-//    assign dac_obi_req              = all_user_sbr_obi_req[UserDac];
-//    assign all_user_sbr_obi_rsp[UserDac] = dac_obi_rsp;
-// `endif
+ `ifdef ENABLE_CD_DAC
+    assign dac_obi_req                   = all_user_sbr_obi_req[UserDac];
+    assign all_user_sbr_obi_rsp[UserDac] = dac_obi_rsp;
+ `endif
 
 
   //-----------------------------------------------------------------------------------------------
@@ -131,7 +133,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
     .ObiCfg      ( SbrObiCfg     ),
     .obi_req_t   ( sbr_obi_req_t ),
     .obi_rsp_t   ( sbr_obi_rsp_t ),
-    .NumMaxTrans ( 1             ),
+    .NumMaxTrans ( 2             ),
     .RspData     ( 32'hBADCAB1E  )
   ) i_user_err (
     .clk_i,
@@ -159,21 +161,21 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
     .dpll_rstn_o	( dpll_rstn_o   ),
     .dpll_extrim_o	( dpll_extrim_o )
 );
-// `ifdef ENABLE_CD_DAC
-//   // DAC
-//   obi_dac #(
-//     .ObiCfg    ( SbrObiCfg     ),
-//     .obi_req_t ( sbr_obi_req_t ),
-//     .obi_rsp_t ( sbr_obi_rsp_t )
-//   ) i_dac (
-//     .clk_i,
-//     .rst_ni,
+ `ifdef ENABLE_CD_DAC
+   // DAC
+   obi_dac #(
+     .ObiCfg    ( SbrObiCfg     ),
+     .obi_req_t ( sbr_obi_req_t ),
+     .obi_rsp_t ( sbr_obi_rsp_t )
+   ) i_dac (
+     .clk_i,
+     .rst_ni,
 
-//     .obi_req_i ( dac_obi_req ),
-//     .obi_rsp_o ( dac_obi_rsp ),
+     .obi_req_i ( dac_obi_req ),
+     .obi_rsp_o ( dac_obi_rsp ),
 
-//     .dac_val_o		( dac_val_o	),
-//     .dac_clk_o		( dac_clk_o    )
-// );
-// `endif
+     .dac_val_o	( dac_val_o),
+     .dac_clk_o	( dac_clk_o)
+ );
+ `endif
 endmodule

@@ -52,12 +52,12 @@ sources:
       - rtl/gpio/gpio.sv
       - rtl/user_domain/dpll/RTL/obi_dpll_register.sv
       - rtl/user_domain/dpll/RTL/obi_dpll.sv
-      - rtl/user_domain/dpll/RTL/digital_pll.v
-      - rtl/user_domain/dpll/RTL/digital_pll_controller.v
-      - rtl/user_domain/dpll/RTL/ring_osc2x13.v
+#      - rtl/user_domain/dpll/RTL/digital_pll.v
+#      - rtl/user_domain/dpll/RTL/digital_pll_controller.v
+#      - rtl/user_domain/dpll/RTL/ring_osc2x13.v
       - rtl/user_domain/cs_dac/obi_dac_regs.sv
       - rtl/user_domain/cs_dac/obi_dac.sv
-      - rtl/user_domain/cs_dac/dac_blackbox.v
+#      - rtl/user_domain/cs_dac/dac_blackbox.v
       - rtl/user_domain/cs_dac/dac_clock_div.v
       # Level 2
       - rtl/croc_domain.sv
@@ -81,8 +81,8 @@ sources:
 
   - target: any(simulation, verilator)
     files:
-      - rtl/tb_croc_soc.sv
-
+       - rtl/tb_croc_soc.sv
+#       - rtl/tb_croc_culp_chip.sv
   - target: genesys2
     files:
       - xilinx/hw/croc_xilinx.sv

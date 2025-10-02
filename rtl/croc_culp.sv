@@ -24,7 +24,7 @@ module croc_culp (
   input wire  fetch_en_i,
   output wire status_o,
 
-`ifdef ENABLE_CS_DAC
+`ifdef ENABLE_CD_DAC
   //dac interface
   output wire dac_clk_o,
   output wire [9:0] dac_val_o,
@@ -71,7 +71,7 @@ module croc_culp (
     .dpll_dco_o		( dpll_dco_o	),
     .dpll_div_o		( dpll_div_o	),
     .dpll_extrim_o	( dpll_extrim_o	),
-// `ifdef ENABLE_CS_DAC
+// `ifdef ENABLE_CD_DAC
 //     .dac_val_o	( dac_val_o	),
 //     .dac_clk_o	( dac_clk_o	),
 // `endif

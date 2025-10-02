@@ -37,10 +37,10 @@ module obi_dac #(
   // REGISTER INTERFACE //
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-  obi_dpll_register #(
+  obi_dac_regs #(
     .obi_req_t (obi_req_t),
     .obi_rsp_t (obi_rsp_t)
-  ) i_dpll_register (
+  ) i_dac_register (
     .clk_i,
     .rst_ni,
 
@@ -50,8 +50,9 @@ module obi_dac #(
     .reg2hw  (r2h),
     .hw2reg (h2r)
   );
-  dac_clock_div #(.SIZE(8))
-   i_dac_clk (.resetb(r2h.rstn)
+  
+  dac_clock_div #(.SIZE(8)
+  )i_dac_clk (.resetb(r2h.rstn)
 	      ,.N(r2h.div)
 	      ,.in(clk_i)
 	      ,.out(dac_clk_o));

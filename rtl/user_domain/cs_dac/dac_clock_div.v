@@ -14,7 +14,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /* Integer-N clock divider */
-`default_nettype none
+
+`default_nettype wire
  
 module dac_clock_div #(
     parameter SIZE = 3		// Number of bits for the divider value
@@ -53,9 +54,9 @@ module dac_clock_div #(
     end
  
     // Even divider
-    even even_0(in, out_even, syncN, resetb, not_zero, enable_even);
+    even #(.SIZE(SIZE)) even_0(in, out_even, syncN, resetb, not_zero, enable_even);
     // Odd divider
-    odd odd_0(in, out_odd, syncN, resetb, enable_odd);
+    odd #(.SIZE(SIZE)) odd_0(in, out_odd, syncN, resetb, enable_odd);
  
 endmodule // clock_div
  

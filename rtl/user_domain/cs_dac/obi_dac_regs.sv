@@ -135,7 +135,7 @@ module obi_dac_regs import obi_dac_pkg::*; #(
            reg_d.div = obi_wdata[7:0];
         end
 	DAC_VALUE_OFFSET: begin
-	   reg_d.dac_val = obi_wdata[7:8];
+	   reg_d.dac_val = obi_wdata[8:7];
 	end
         default: begin
           w_err_d = 1'b1; // unmapped register access

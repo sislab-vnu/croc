@@ -48,18 +48,18 @@ module croc_culp_chip (
   // inout wire  adc_inp_i,
   // inout wire  adc_inn_i       
 ); 
-    logic soc_clk_i;
-    logic soc_rst_ni;
-    logic soc_ref_clk_i;
+   logic soc_clk_i;
+   logic soc_rst_ni;
+   logic soc_ref_clk_i;
 
-    logic soc_jtag_tck_i;
-    logic soc_jtag_trst_ni;
-    logic soc_jtag_tms_i;
-    logic soc_jtag_tdi_i;
-    logic soc_jtag_tdo_o;
+   logic soc_jtag_tck_i;
+   logic soc_jtag_trst_ni;
+   logic soc_jtag_tms_i;
+   logic soc_jtag_tdi_i;
+   logic soc_jtag_tdo_o;
 
-    logic soc_fetch_en_i;
-    logic soc_status_o;
+   logic soc_fetch_en_i;
+   logic soc_status_o;
 
    logic  soc_osc_clk_i;
    logic  dpll_en;
@@ -69,12 +69,12 @@ module croc_culp_chip (
    logic [26:0] dpll_extrim;
 
 
-    localparam int unsigned GpioCount = 16;
+   localparam int unsigned GpioCount = 16;
 
-    logic [GpioCount-1:0] soc_gpio_i;             
-    logic [GpioCount-1:0] soc_gpio_o;            
-    logic [GpioCount-1:0] soc_gpio_ie_o;            
-    logic [GpioCount-1:0] soc_gpio_en_o; // Output enable signal; 0 -> input, 1 -> output
+   logic [GpioCount-1:0] soc_gpio_i;             
+   logic [GpioCount-1:0] soc_gpio_o;            
+   logic [GpioCount-1:0] soc_gpio_ie_o;            
+   logic [GpioCount-1:0] soc_gpio_en_o; // Output enable signal; 0 -> input, 1 -> output
    
    wire 		  dac_outp_o;
    wire 		  dac_outn_o;
@@ -82,7 +82,7 @@ module croc_culp_chip (
    wire 		  adc_inp_i;
    wire 		  adc_inn_i;
 
-// `ifdef ENABLE_CS_DAC
+// `ifdef ENABLE_CD_DAC
 //    wire [10:1] 		  dac_in;
 //    (* dont_touch = "true" *)
 //    CS_DAC_10b i_dac(.X1(dac_in[1]),
@@ -116,10 +116,10 @@ module croc_culp_chip (
     .ref_clk_i		( soc_ref_clk_i		),
     .fetch_en_i		( soc_fetch_en_i	),
     .status_o		( soc_status_o		),
-`ifdef ENABLE_CS_DAC
-    .dac_clk_o		( dac_clk		),
-    .dac_val_o		( dac_in		),
-`endif
+//`ifdef ENABLE_CD_DAC
+//    .dac_clk_o		( dac_clk		),
+//    .dac_val_o		( dac_in		),
+//`endif
     .dpll_en_o		( dpll_en		),
     .dpll_dco_o		( dpll_dco		),
     .dpll_rstn_o	( dpll_rstn		),
@@ -396,7 +396,7 @@ module croc_culp_chip (
 						  .VSS(VSS),
 						  .VDD(VDD),
 						  .PAD(osc_clk_i),        .Y(soc_osc_clk_i),        .PU(soc_tie_l), .PD(soc_tie_h));
-`ifdef ENABLE_CS_DAC
+`ifdef ENABLE_CD_DAC
    (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outp_o (.DVDD(VDD),
 								      .DVSS(VSS),
 								      .VSS(VSS),
