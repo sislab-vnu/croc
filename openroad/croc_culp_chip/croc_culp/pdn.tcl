@@ -27,7 +27,7 @@ add_pdn_ring -grid {block} \
    -layer        {Metal4 Metal3} \
    -widths       "4.48 4.48" \
     -spacings     "0.56 0.56" \
-    -core_offsets "2 2" \
+    -core_offsets "1 1" \
    -add_connect
 
 add_pdn_stripe -grid {block} \
@@ -57,8 +57,7 @@ add_pdn_stripe -grid {block} \
 add_pdn_connect -grid {block} \
     -layers {Metal1 Metal4} \
     -max_columns {5} \
-    -ongrid {Metal2 Metal3 Metal4} \
-    -split_cuts {Metal3 0.128}
+    -ongrid {Metal2 Metal3 Metal4}
 
 # add_pdn_connect -grid {block} \
 #     -layers {Metal4 Metal5}
