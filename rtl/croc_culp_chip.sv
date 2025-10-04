@@ -5,6 +5,8 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
+`define ENABLE_CD_DAC 
+
 module croc_culp_chip (
   // inout wire VDD,
   // inout wire VSS,
@@ -41,10 +43,10 @@ module croc_culp_chip (
   inout wire  gpio14_io,
   inout wire  gpio15_io,
   output wire pll_clk_o,
-  input wire  osc_clk_i
-  // inout wire dac_outp_o,
-  // inout wire dac_outn_o,
-  // inout wire  dac_vbias_i,
+  input wire  osc_clk_i,
+  inout wire  dac_outp_o,
+  inout wire  dac_outn_o,
+  inout wire  dac_vbias_i
   // inout wire  adc_inp_i,
   // inout wire  adc_inn_i       
 ); 
@@ -82,24 +84,24 @@ module croc_culp_chip (
    wire 		  adc_inp_i;
    wire 		  adc_inn_i;
 
-// `ifdef ENABLE_CD_DAC
-//    wire [10:1] 		  dac_in;
-//    (* dont_touch = "true" *)
-//    CS_DAC_10b i_dac(.X1(dac_in[1]),
-// 		    .X2(dac_in[2]),
-// 		    .X3(dac_in[3]),
-// 		    .X4(dac_in[4]),
-// 		    .X5(dac_in[5]),
-// 		    .X6(dac_in[6]),
-// 		    .X7(dac_in[7]),
-// 		    .X8(dac_in[8]),
-// 		    .X9(dac_in[9]),
-// 		    .X10(dac_in[10]),
-// 		    .CLK(dac_clk),
-// 		    .VBIAS(dac_vbias_i),
-// 		    .OUTP(dac_outp_o),
-// 		    .OUTN(dac_outn_o));
-// `endif
+`ifdef ENABLE_CD_DAC
+    wire [10:1] 		  dac_in;
+    (* dont_touch = "true" *)
+    CS_DAC_10b i_dac(.X1(dac_in[1]),
+ 		    .X2(dac_in[2]),
+ 		    .X3(dac_in[3]),
+ 		    .X4(dac_in[4]),
+ 		    .X5(dac_in[5]),
+ 		    .X6(dac_in[6]),
+ 		    .X7(dac_in[7]),
+ 		    .X8(dac_in[8]),
+ 		    .X9(dac_in[9]),
+ 		    .X10(dac_in[10]),
+ 		    .CLK(dac_clk),
+ 		    .VBIAS(dac_vbias_i),
+ 		    .OUTP(dac_outp_o),
+ 		    .OUTN(dac_outn_o));
+`endif
    digital_pll
      i_pll(.resetb(dpll_rstn)
 	   ,.enable(dpll_en)
@@ -116,10 +118,10 @@ module croc_culp_chip (
     .ref_clk_i		( soc_ref_clk_i		),
     .fetch_en_i		( soc_fetch_en_i	),
     .status_o		( soc_status_o		),
-//`ifdef ENABLE_CD_DAC
-//    .dac_clk_o		( dac_clk		),
-//    .dac_val_o		( dac_in		),
-//`endif
+`ifdef ENABLE_CD_DAC
+    .dac_clk_o		( dac_clk		),
+    .dac_val_o		( dac_in		),
+`endif
     .dpll_en_o		( dpll_en		),
     .dpll_dco_o		( dpll_dco		),
     .dpll_rstn_o	( dpll_rstn		),
@@ -412,17 +414,18 @@ module croc_culp_chip (
 								       .VSS(VSS),
 								       .VDD(VDD),
 								       .ASIG5V(dac_vbias_i));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inp_i (.DVDD(VDD),
-								     .DVSS(VSS),
-								     .VSS(VSS),
-								     .VDD(VDD),
-								     .ASIG5V(adc_inp_i));
-   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inn_i (.DVDD(VDD),
-								     .DVSS(VSS),
-								     .VSS(VSS),
-								     .VDD(VDD),
-								     .ASIG5V(adc_inn_i));
+//   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inp_i (.DVDD(VDD),
+//								     .DVSS(VSS),
+//								     .VSS(VSS),
+//								     .VDD(VDD),
+//								     .ASIG5V(adc_inp_i));
+//   (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_adc_inn_i (.DVDD(VDD),
+//								     .DVSS(VSS),
+//								     .VSS(VSS),
+//								     .VDD(VDD),
+//								     .ASIG5V(adc_inn_i));
 `endif
+
     (* dont_touch = "true" *)gf180mcu_fd_io__dvdd pad_vdd0(.DVDD(VDD),
 							   .DVSS(VSS),
 							   .VSS(VSS));

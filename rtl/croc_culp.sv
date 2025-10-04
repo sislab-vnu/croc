@@ -71,10 +71,10 @@ module croc_culp (
     .dpll_dco_o		( dpll_dco_o	),
     .dpll_div_o		( dpll_div_o	),
     .dpll_extrim_o	( dpll_extrim_o	),
-// `ifdef ENABLE_CD_DAC
-//     .dac_val_o	( dac_val_o	),
-//     .dac_clk_o	( dac_clk_o	),
-// `endif
+`ifdef ENABLE_CD_DAC
+     .dac_val_o	( dac_val_o	),
+     .dac_clk_o	( dac_clk_o	),
+`endif
     .gpio_i         ( gpio_i        ),
     .gpio_o         ( gpio_o        ),
     .gpio_out_en_o  ( gpio_en_o     )
