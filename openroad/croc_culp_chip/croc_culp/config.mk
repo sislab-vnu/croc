@@ -73,7 +73,7 @@ export VERILOG_INCLUDE_DIRS = ../../rtl/apb/include \
         ../../rtl/obi/include \
         ../../rtl/register_interface/include
 
-export VERILOG_DEFINES = -D TARGET_ASIC -D TARGET_GF180MCU -D TARGET_SYNTHESIS -D SYNTHESIS=1
+export VERILOG_DEFINES = -D TARGET_ASIC -D TARGET_GF180MCU -D TARGET_SYNTHESIS -D SYNTHESIS=1 -D ENABLE_CS_DAC
 export SYNTH_HDL_FRONTEND = slang
 export VERILOG_FILES = ../../rtl/common_cells/binary_to_gray.sv \
 ../../rtl/common_cells/cb_filter_pkg.sv \

@@ -92,6 +92,9 @@ place_pad -row IO_SOUTH  -location [expr $start +  7*$pitch] "pad_pll_clk_o"    
 place_pad -row IO_SOUTH  -location [expr $start +  8*$pitch] "pad_osc_clk_i"     ; # pin no:  4
 # place_pad -row IO_SOUTH  -location [expr $start +  7*$pitch] "pad_adc_inp_i"     ; # pin no:  8
 # place_pad -row IO_SOUTH  -location [expr $start +  8*$pitch] "pad_adc_inn_i"     ; # pin no:  9
+place_pad -row IO_SOUTH  -location [expr $start +  9*$pitch] "pad_dac_outp_o"     ; # pin no:  5
+place_pad -row IO_SOUTH  -location [expr $start +  10*$pitch] "pad_dac_outn_o"     ; # pin no:  6
+place_pad -row IO_SOUTH  -location [expr $start +  11*$pitch] "pad_dac_vbias_i"     ; # pin no:  7
 # place_pad -row IO_SOUTH  -location [expr $start +  9*$pitch] "pad_gpio7_io"     ; # pin no: 10
 # place_pad -row IO_SOUTH  -location [expr $start + 10*$pitch] "pad_gpio8_io"     ; # pin no: 11
 # place_pad -row IO_SOUTH  -location [expr $start + 11*$pitch] "pad_gpio9_io"     ; # pin no: 12

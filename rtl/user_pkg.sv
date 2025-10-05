@@ -8,8 +8,6 @@
 `include "register_interface/typedef.svh"
 `include "obi/typedef.svh"
 
-`define ENABLE_CD_DAC
-
 package user_pkg;
 
   ////////////////////////////////
@@ -23,7 +21,7 @@ package user_pkg;
   // User Subordinate Address maps ////
   /////////////////////////////////////
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
     localparam int unsigned NumUserDomainSubordinates = 2;
  `else
    localparam int unsigned NumUserDomainSubordinates = 1;
@@ -37,7 +35,7 @@ package user_pkg;
   localparam bit [31:0] DpllAddrOffset    = croc_pkg::UserBaseAddr;
   localparam bit [31:0] DpllAddrRange     = 32'h0000_1000;
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    localparam bit [31:0] DacAddrOffset    = croc_pkg::UserBaseAddr + DpllAddrRange;
    localparam bit [31:0] DacAddrRange     = 32'h0000_1000;
  `endif
@@ -49,7 +47,7 @@ package user_pkg;
   typedef enum int {
     UserError = 0,
     UserDpll = 1
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
     , UserDac = 2
  `endif
   } user_demux_outputs_e;
@@ -57,7 +55,7 @@ package user_pkg;
   // Address rules given to address decoder
   localparam croc_pkg::addr_map_rule_t [NumDemuxSbrRules-1:0] user_addr_map = '{
      '{idx: UserDpll, start_addr: DpllAddrOffset, end_addr: DpllAddrOffset + DpllAddrRange}
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
      ,'{idx: UserDac, start_addr: DacAddrOffset, end_addr: DacAddrOffset + DacAddrRange}
  `endif
 };

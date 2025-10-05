@@ -5,9 +5,6 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
-`define TRACE_WAVE
-`define ENABLE_CD_DAC
-
 module tb_croc_soc #(
     parameter time         ClkPeriod     = 50ns,
     parameter time         ClkPeriodJtag = 50ns,
@@ -431,7 +428,7 @@ module tb_croc_soc #(
         .gpio_o        ( gpio_o        ),            
         .gpio_out_en_o ( gpio_out_en_o ),
 
-     `ifdef ENABLE_CD_DAC
+     `ifdef ENABLE_CS_DAC
          .dac_clk_o    (dac_clk_o),
          .dac_val_o    (dac_val_o),
      `endif

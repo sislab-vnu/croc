@@ -8,8 +8,6 @@
 `include "register_interface/typedef.svh"
 `include "obi/typedef.svh"
 
-`define ENABLE_CD_DAC
-
 package croc_pkg;
 
   localparam int unsigned HartId = 32'd0;

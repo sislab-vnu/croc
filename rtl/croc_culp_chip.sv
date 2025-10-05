@@ -5,8 +5,6 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
-`define ENABLE_CD_DAC 
-
 module croc_culp_chip (
   // inout wire VDD,
   // inout wire VSS,
@@ -43,10 +41,10 @@ module croc_culp_chip (
   inout wire  gpio14_io,
   inout wire  gpio15_io,
   output wire pll_clk_o,
-  input wire  osc_clk_i,
-  inout wire  dac_outp_o,
-  inout wire  dac_outn_o,
-  inout wire  dac_vbias_i
+  input wire  osc_clk_i
+//  inout wire  dac_outp_o,
+//  inout wire  dac_outn_o,
+//  inout wire  dac_vbias_i
   // inout wire  adc_inp_i,
   // inout wire  adc_inn_i       
 ); 
@@ -84,7 +82,8 @@ module croc_culp_chip (
    wire 		  adc_inp_i;
    wire 		  adc_inn_i;
 
-`ifdef ENABLE_CD_DAC
+`ifdef ENABLE_CS_DAC
+
     wire [10:1] 		  dac_in;
     (* dont_touch = "true" *)
     CS_DAC_10b i_dac(.X1(dac_in[1]),
@@ -102,6 +101,7 @@ module croc_culp_chip (
  		    .OUTP(dac_outp_o),
  		    .OUTN(dac_outn_o));
 `endif
+
    digital_pll
      i_pll(.resetb(dpll_rstn)
 	   ,.enable(dpll_en)
@@ -118,7 +118,7 @@ module croc_culp_chip (
     .ref_clk_i		( soc_ref_clk_i		),
     .fetch_en_i		( soc_fetch_en_i	),
     .status_o		( soc_status_o		),
-`ifdef ENABLE_CD_DAC
+`ifdef ENABLE_CS_DAC
     .dac_clk_o		( dac_clk		),
     .dac_val_o		( dac_in		),
 `endif
@@ -159,82 +159,126 @@ module croc_culp_chip (
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(clk_i),        .Y(soc_clk_i),        .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(clk_i),
+					       .Y(soc_clk_i),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_rst_ni       (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(rst_ni),       .Y(soc_rst_ni),       .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(rst_ni),
+					       .Y(soc_rst_ni),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_ref_clk_i    (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(ref_clk_i),    .Y(soc_ref_clk_i),    .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(ref_clk_i),
+					       .Y(soc_ref_clk_i),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
   
     gf180mcu_fd_io__in_c     pad_jtag_tck_i   (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(jtag_tck_i),   .Y(soc_jtag_tck_i),   .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(jtag_tck_i),
+					       .Y(soc_jtag_tck_i),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_jtag_trst_ni (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(jtag_trst_ni), .Y(soc_jtag_trst_ni), .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(jtag_trst_ni),
+					       .Y(soc_jtag_trst_ni),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_jtag_tms_i   (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(jtag_tms_i),   .Y(soc_jtag_tms_i),   .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(jtag_tms_i),
+					       .Y(soc_jtag_tms_i),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
     gf180mcu_fd_io__in_c     pad_jtag_tdi_i   (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(jtag_tdi_i),   .Y(soc_jtag_tdi_i),   .PU(soc_tie_l), .PD(soc_tie_h));
+					       .PAD(jtag_tdi_i),
+					       .Y(soc_jtag_tdi_i),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h));
 
     gf180mcu_fd_io__bi_t     pad_jtag_tdo_o   (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(jtag_tdo_o),   .A(soc_jtag_tdo_o),   .CS(soc_tie_l),
-					       .SL(soc_tie_l),       .IE(soc_tie_l),       .OE(soc_tie_h),
-					       .PU(soc_tie_l),       .PD(soc_tie_h),       .Y(tdo_dummy));
+					       .PAD(jtag_tdo_o),
+					       .A(soc_jtag_tdo_o),
+					       .CS(soc_tie_l),
+					       .SL(soc_tie_l),
+					       .IE(soc_tie_l),
+					       .OE(soc_tie_h),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h),
+					       .Y(tdo_dummy));
 
     gf180mcu_fd_io__in_c     pad_uart_rx_i    (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(uart_rx_i),    .Y(soc_uart_rx_i),    .PU(soc_tie_h), .PD(soc_tie_l));
+					       .PAD(uart_rx_i),
+					       .Y(soc_uart_rx_i),
+					       .PU(soc_tie_h),
+					       .PD(soc_tie_l));
     gf180mcu_fd_io__bi_t     pad_uart_tx_o    (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(uart_tx_o),    .A(soc_uart_tx_o),    .OE(soc_tie_h),
-					       .CS(soc_tie_l),       .SL(soc_tie_l),       .IE(soc_tie_l), .PU(soc_tie_h), .PD(soc_tie_l), .Y(uart_tx_dummy));
+					       .PAD(uart_tx_o),
+					       .A(soc_uart_tx_o),
+					       .OE(soc_tie_h),
+					       .CS(soc_tie_l),
+					       .SL(soc_tie_l),
+					       .IE(soc_tie_l),
+					       .PU(soc_tie_h),
+					       .PD(soc_tie_l),
+					       .Y(uart_tx_dummy));
 
     gf180mcu_fd_io__in_c     pad_fetch_en_i   (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(fetch_en_i),   .Y(soc_fetch_en_i));
+					       .PAD(fetch_en_i),
+					       .Y(soc_fetch_en_i));
     gf180mcu_fd_io__bi_t     pad_status_o     (
 					       .DVDD(VDD),
 					       .DVSS(VSS),
 					       .VSS(VSS),
 					       .VDD(VDD),
-					       .PAD(status_o),     .A(soc_status_o), .OE(soc_tie_h),
-					       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_tie_l), .PU(soc_tie_l),
-					       .PD(soc_tie_h), .Y(status_dummy));
+					       .PAD(status_o),
+					       .A(soc_status_o),
+					       .OE(soc_tie_h),
+					       .CS(soc_tie_l),
+					       .SL(soc_tie_l),
+					       .IE(soc_tie_l),
+					       .PU(soc_tie_l),
+					       .PD(soc_tie_h),
+					       .Y(status_dummy));
  // `define GPIO_PAD (instname, pad, c2p, p2c, c2en) \
  //   gf180mcu_fd_io__bi_t ``instname``     (.PAD(pad), .A(c2p), .Y(p2c) .OE(c2en), \
  // 					    .CS(soc_tie_l), .SL(soc_tie_l), .IE(~c2en), .PU(soc_tie_l), \
@@ -250,8 +294,14 @@ module croc_culp_chip (
 				      .DVSS(VSS),
 				      .VSS(VSS),
 				      .VDD(VDD),
-				      .PAD(gpio0_io), .A(soc_gpio_o[0]), .Y(soc_gpio_i[0]), .OE(soc_gpio_en_o[0]), 
-				      .CS(soc_tie_l), .SL(soc_tie_l), .IE(~soc_gpio_ie_o[0]), .PU(soc_tie_l), 
+				      .PAD(gpio0_io),
+				      .A(soc_gpio_o[0]),
+				      .Y(soc_gpio_i[0]),
+				      .OE(soc_gpio_en_o[0]), 
+				      .CS(soc_tie_l),
+				      .SL(soc_tie_l),
+				      .IE(~soc_gpio_ie_o[0]),
+				      .PU(soc_tie_l), 
 				      .PD(soc_tie_h));
     
 
@@ -398,7 +448,7 @@ module croc_culp_chip (
 						  .VSS(VSS),
 						  .VDD(VDD),
 						  .PAD(osc_clk_i),        .Y(soc_osc_clk_i),        .PU(soc_tie_l), .PD(soc_tie_h));
-`ifdef ENABLE_CD_DAC
+`ifdef ENABLE_CS_DAC
    (* dont_touch = "true" *) gf180mcu_fd_io__asig_5p0 pad_dac_outp_o (.DVDD(VDD),
 								      .DVSS(VSS),
 								      .VSS(VSS),

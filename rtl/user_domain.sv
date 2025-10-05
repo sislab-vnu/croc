@@ -5,8 +5,6 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
-`define ENABLE_CD_DAC
-
 module user_domain import user_pkg::*; import croc_pkg::*; #(
   parameter int unsigned GpioCount = 16
 ) (
@@ -21,7 +19,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   output logic [4:0] 		     dpll_div_o,
   output logic [26:0] 		     dpll_extrim_o,
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    output logic [9:0]	             dac_val_o,
    output logic 	             dac_clk_o,
  `endif
@@ -66,7 +64,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   sbr_obi_req_t dpll_obi_req;
   sbr_obi_rsp_t dpll_obi_rsp;
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    sbr_obi_req_t dac_obi_req;
    sbr_obi_rsp_t dac_obi_rsp;
  `endif
@@ -77,7 +75,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
   assign dpll_obi_req                    = all_user_sbr_obi_req[UserDpll];
   assign all_user_sbr_obi_rsp[UserDpll]  = dpll_obi_rsp;
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
     assign dac_obi_req                   = all_user_sbr_obi_req[UserDac];
     assign all_user_sbr_obi_rsp[UserDac] = dac_obi_rsp;
  `endif
@@ -161,7 +159,7 @@ module user_domain import user_pkg::*; import croc_pkg::*; #(
     .dpll_rstn_o	( dpll_rstn_o   ),
     .dpll_extrim_o	( dpll_extrim_o )
 );
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    // DAC
    obi_dac #(
      .ObiCfg    ( SbrObiCfg     ),

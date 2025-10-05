@@ -70,7 +70,7 @@ export ADDITIONAL_LEFS = $(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lef/gf180mcu_f
 	$(PDK_PATH)/libs.ref/gf180mcu_fd_io/lef/gf180mcu_fd_io__fill5.lef \
 	$(PDK_PATH)/libs.ref/gf180mcu_fd_io/lef/gf180mcu_fd_io__fill10.lef \
 	gf180mcu_fd_io.tlef \
-        # CS_DAC_10b/CS_DAC_10b.lef \
+        CS_DAC_10b/CS_DAC_10b.lef
 
 
 export ADDITIONAL_LIBS = $(PDK_PATH)/libs.ref/gf180mcu_fd_io/lib/gf180mcu_fd_io__tt_025C_3v30.lib \
@@ -81,7 +81,7 @@ export ADDITIONAL_LIBS = $(PDK_PATH)/libs.ref/gf180mcu_fd_io/lib/gf180mcu_fd_io_
 export ADDITIONAL_GDS = $(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/gds/gf180mcu_fd_ip_sram__sram256x8m8wm1.gds \
 		$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/gds/gf180mcu_fd_ip_sram__sram512x8m8wm1.gds \
 		$(PDK_PATH)/libs.ref/gf180mcu_fd_io/gds/gf180mcu_fd_io.gds \
-		# CS_DAC_10b/CS_DAC_10b.gds \
+		CS_DAC_10b/CS_DAC_10b.gds
 
 export VERILOG_INCLUDE_DIRS = ../../rtl/apb/include \
         ../../rtl/common_cells/include \
@@ -89,7 +89,7 @@ export VERILOG_INCLUDE_DIRS = ../../rtl/apb/include \
         ../../rtl/obi/include \
         ../../rtl/register_interface/include
 
-export VERILOG_DEFINES = -D TARGET_ASIC -D TARGET_GF180MCU -D TARGET_SYNTHESIS -D SYNTHESIS=1 -D CROC_CULP_BLACKBOX
+export VERILOG_DEFINES = -D TARGET_ASIC -D TARGET_GF180MCU -D TARGET_SYNTHESIS -D SYNTHESIS=1 -D CROC_CULP_BLACKBOX -D ENABLE_CS_DAC
 export SYNTH_HDL_FRONTEND = slang
 
 export VERILOG_FILES = ../../rtl/common_cells/binary_to_gray.sv \

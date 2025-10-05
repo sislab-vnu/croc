@@ -33,6 +33,6 @@ set_io_pin_constraint -pin_names { \
     -region right:*
 
 set_io_pin_constraint -pin_names { \
-				       dpll_*
+				       dpll_* dac_*
 				   } \
     -region bottom:*

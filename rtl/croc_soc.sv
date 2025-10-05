@@ -5,8 +5,6 @@
 // Authors:
 // - Philippe Sauter <phsauter@iis.ee.ethz.ch>
 
-`define ENABLE_CD_DAC
-
 module croc_soc import croc_pkg::*; #(
   parameter int unsigned GpioCount = 16
 ) (
@@ -16,7 +14,7 @@ module croc_soc import croc_pkg::*; #(
   input logic 		       testmode_i,
   input logic 		       fetch_en_i,
   output logic 		       status_o,
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    output logic                dac_clk_o,
    output logic [9:0] 	       dac_val_o,
  `endif
@@ -119,7 +117,7 @@ user_domain #(
   .dpll_dco_o (dpll_dco_o),
   .dpll_extrim_o (dpll_extrim_o),
 
- `ifdef ENABLE_CD_DAC
+ `ifdef ENABLE_CS_DAC
    .dac_val_o (dac_val_o),
    .dac_clk_o (dac_clk_o),
  `endif
