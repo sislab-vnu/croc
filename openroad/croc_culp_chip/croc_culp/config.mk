@@ -14,8 +14,23 @@ export KVALUE          = 9
 export PLATFORM        = gf180
 export CORE_AREA = 15.12 15.68 2125.2 1889.44
 export DIE_AREA = 0 0 2140.32 1905.12
-
-# export PLACE_PINS_ARGS = -min_distance 50.0 -corner_avoidance 50.0
+PIN_GROUP := gpio_i[15] gpio_en_o[15] gpio_o[15]
+PIN_GROUP += gpio_i[14] gpio_en_o[14] gpio_o[14]
+PIN_GROUP += gpio_i[13] gpio_en_o[13] gpio_o[13]
+PIN_GROUP += gpio_i[12] gpio_en_o[12] gpio_o[12]
+PIN_GROUP += gpio_i[11] gpio_en_o[11] gpio_o[11]
+PIN_GROUP += gpio_i[10] gpio_en_o[10] gpio_o[10]
+PIN_GROUP += gpio_i[9] gpio_en_o[9] gpio_o[9]
+PIN_GROUP += gpio_i[8] gpio_en_o[8] gpio_o[8]
+PIN_GROUP += gpio_i[7] gpio_en_o[7] gpio_o[7]
+PIN_GROUP += gpio_i[6] gpio_en_o[6] gpio_o[6]
+PIN_GROUP += gpio_i[5] gpio_en_o[5] gpio_o[5]
+PIN_GROUP += gpio_i[4] gpio_en_o[4] gpio_o[4]
+PIN_GROUP += gpio_i[3] gpio_en_o[3] gpio_o[3]
+PIN_GROUP += gpio_i[2] gpio_en_o[2] gpio_o[2]
+PIN_GROUP += gpio_i[1] gpio_en_o[1] gpio_o[1]
+PIN_GROUP += gpio_i[0] gpio_en_o[0] gpio_o[0]
+# export PLACE_PINS_ARGS = -min_distance 20.0 -corner_avoidance 20.0 -group_pins { $(PIN_GROUP) }
 
 export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_3v60.lib.gz) \
 			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib \
@@ -56,7 +71,7 @@ export MACRO_PLACEMENT_TCL = $(DESIGN_NAME)/macro_placement.tcl
 
 export CORE_MARGIN       = 1
 
-export PLACE_DENSITY = 0.45
+export PLACE_DENSITY = 0.6
 export MACRO_PLACE_HALO = 10 10
 
 export CORNERS = slow typ fast

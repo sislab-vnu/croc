@@ -14,6 +14,9 @@ add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSE$}
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSC$}
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VPW$}
 
+# add_global_connection -net {VDD_SRAM} -inst_pattern {.*u_sram} -pin_pattern {^VDD$}
+# add_global_connection -net {VSS_SRAM} -inst_pattern {.*u_sram} -pin_pattern {^VSS$}
+
 ####################################
 # voltage domains
 ####################################
@@ -21,7 +24,7 @@ set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}
 ####################################
 # standard cell grid
 ####################################
-define_pdn_grid -name {block} -voltage_domains {CORE} -pins {Metal4}
+define_pdn_grid -name {block} -voltage_domains {CORE}
 
 add_pdn_ring -grid {block} \
    -layer        {Metal4 Metal3} \
@@ -65,11 +68,10 @@ add_pdn_connect -grid {block} \
 define_pdn_grid -macro -name macro -default -starts_with POWER -halo 0
 
 add_pdn_ring -grid {macro} \
-   -layer        {Metal2 Metal3} \
+   -layer        {Metal3 Metal2} \
    -widths       "3 3" \
     -spacings     "0.56 0.56" \
-    -core_offsets "1 1" \
-    -add_connect
+    -core_offsets "1 1"
 
 add_pdn_stripe \
     -grid macro \
@@ -98,6 +100,8 @@ add_pdn_stripe \
 add_pdn_connect \
     -grid macro \
     -layers "Metal3 Metal4"
+add_sroute_connect -net VDD -inst {*u_sram} -cut_pitch {200 200} -layers {Metal3 Metal4} -ongrid {Metal3} -outerNet {VDD}
+add_sroute_connect -net VSS -inst {*u_sram} -cut_pitch {200 200} -layers {Metal3 Metal4} -ongrid {Metal3} -outerNet {VSS}
 
 # add_pdn_connect \
 #     -grid macro \

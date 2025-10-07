@@ -40,6 +40,24 @@ module croc_culp_chip (
   inout wire  gpio13_io,
   inout wire  gpio14_io,
   inout wire  gpio15_io,
+  inout wire  gpio16_io,
+  inout wire  gpio17_io,
+  inout wire  gpio18_io,
+  inout wire  gpio19_io,
+  inout wire  gpio20_io,
+  inout wire  gpio21_io,
+  inout wire  gpio22_io,
+  inout wire  gpio23_io,
+  inout wire  gpio24_io,
+  inout wire  gpio25_io,
+  inout wire  gpio26_io,
+  inout wire  gpio27_io,
+  inout wire  gpio28_io,
+  inout wire  gpio29_io,
+  inout wire  gpio30_io,
+  inout wire  gpio31_io,
+  inout wire  unused1_o,
+  inout wire  unused2_o,
   output wire pll_clk_o,
   input wire  osc_clk_i
   // inout wire dac_outp_o,
@@ -69,7 +87,7 @@ module croc_culp_chip (
    logic [26:0] dpll_extrim;
 
 
-    localparam int unsigned GpioCount = 16;
+    localparam int unsigned GpioCount = 32;
 
     logic [GpioCount-1:0] soc_gpio_i;             
     logic [GpioCount-1:0] soc_gpio_o;            
@@ -379,6 +397,162 @@ module croc_culp_chip (
 				       .PAD(gpio15_io), .A(soc_gpio_o[15]), .Y(soc_gpio_i[15]), .OE(soc_gpio_en_o[15]), 
 				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[15]), .PU(soc_tie_l),
 				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio16_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio16_io), .A(soc_gpio_o[16]), .Y(soc_gpio_i[16]), .OE(soc_gpio_en_o[16]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[16]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio17_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio17_io), .A(soc_gpio_o[17]), .Y(soc_gpio_i[17]), .OE(soc_gpio_en_o[17]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[17]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio18_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio18_io), .A(soc_gpio_o[18]), .Y(soc_gpio_i[18]), .OE(soc_gpio_en_o[18]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[18]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio19_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio19_io), .A(soc_gpio_o[19]), .Y(soc_gpio_i[19]), .OE(soc_gpio_en_o[19]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[19]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio20_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio20_io), .A(soc_gpio_o[20]), .Y(soc_gpio_i[20]), .OE(soc_gpio_en_o[20]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[20]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio21_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio21_io), .A(soc_gpio_o[21]), .Y(soc_gpio_i[21]), .OE(soc_gpio_en_o[21]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[21]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+   gf180mcu_fd_io__bi_t pad_gpio22_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio22_io), .A(soc_gpio_o[22]), .Y(soc_gpio_i[22]), .OE(soc_gpio_en_o[22]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[22]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio23_io (
+				       .DVDD(VDD),
+				       .DVSS(VSS),
+				       .VSS(VSS),
+				       .VDD(VDD),
+				       .PAD(gpio23_io), .A(soc_gpio_o[23]), .Y(soc_gpio_i[23]), .OE(soc_gpio_en_o[23]), 
+				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[23]), .PU(soc_tie_l),
+				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio24_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio24_io), .A(soc_gpio_o[24]), .Y(soc_gpio_i[24]), .OE(soc_gpio_en_o[24]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[24]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio25_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio25_io), .A(soc_gpio_o[25]), .Y(soc_gpio_i[25]), .OE(soc_gpio_en_o[25]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[25]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio26_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio26_io), .A(soc_gpio_o[26]), .Y(soc_gpio_i[26]), .OE(soc_gpio_en_o[26]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[26]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio27_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio27_io), .A(soc_gpio_o[27]), .Y(soc_gpio_i[27]), .OE(soc_gpio_en_o[27]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[27]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio28_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio28_io), .A(soc_gpio_o[28]), .Y(soc_gpio_i[28]), .OE(soc_gpio_en_o[28]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[28]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio29_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio29_io), .A(soc_gpio_o[29]), .Y(soc_gpio_i[29]), .OE(soc_gpio_en_o[29]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[29]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio30_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio30_io), .A(soc_gpio_o[30]), .Y(soc_gpio_i[30]), .OE(soc_gpio_en_o[30]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[30]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_gpio31_io (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(gpio31_io), .A(soc_gpio_o[31]), .Y(soc_gpio_i[31]), .OE(soc_gpio_en_o[31]), 
+  				       .CS(soc_tie_l), .SL(soc_tie_l), .IE(soc_gpio_ie_o[31]), .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_unused1_o (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(unused1_o),
+				       .A(),
+				       .Y(),
+				       .OE(), 
+  				       .CS(soc_tie_h),
+				      .SL(soc_tie_l),
+				      .IE(soc_tie_h),
+				      .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
+  gf180mcu_fd_io__bi_t pad_unused2_o (
+  				       .DVDD(VDD),
+  				       .DVSS(VSS),
+  				       .VSS(VSS),
+  				       .VDD(VDD),
+  				       .PAD(unused2_o),
+				       .A(),
+				       .Y(),
+				       .OE(), 
+  				       .CS(soc_tie_h),
+				      .SL(soc_tie_l),
+				      .IE(soc_tie_h),
+				      .PU(soc_tie_l),
+  				       .PD(soc_tie_h));
     
    (* dont_touch = "true" *)
     gf180mcu_fd_io__bi_t pad_pll_clk_o     (.DVDD(VDD),

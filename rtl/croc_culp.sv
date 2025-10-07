@@ -42,7 +42,7 @@ module croc_culp (
 ); 
 `ifndef CROC_CULP_BLACKBOX
 
-    localparam int unsigned GpioCount = 16;
+    localparam int unsigned GpioCount = 32;
 
     logic [GpioCount-1:0] soc_gpio_out_en_o; // Output enable signal; 0 -> input, 1 -> output
    
