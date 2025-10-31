@@ -30,9 +30,9 @@ module croc_culp (
   output wire [9:0] dac_val_o,
 `endif
 
-  input wire  [15:0] gpio_i,
-  output wire [15:0] gpio_o,
-  output wire [15:0] gpio_en_o,
+  input wire  [31:0] gpio_i,
+  output wire [31:0] gpio_o,
+  output wire [31:0] gpio_en_o,
 
   output wire dpll_en_o, 
   output wire dpll_dco_o, 
