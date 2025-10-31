@@ -43,7 +43,7 @@ make_io_sites -horizontal_site GF_IO_Site \
     -rotation_corner R0
 
 set iocorner gf180mcu_fd_io__cor
-set iofill [ list gf180mcu_fd_io__fill1 gf180mcu_fd_io__fill5 gf180mcu_fd_io__fill10]
+set iofill [ list gf180mcu_fd_io__fill10 gf180mcu_fd_io__fill5 gf180mcu_fd_io__fill1]
 
 set padD    355; # pad depth (edge to core)
 set padW     75; # pad width (beachfront)
