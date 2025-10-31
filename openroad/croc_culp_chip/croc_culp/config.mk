@@ -30,27 +30,40 @@ PIN_GROUP += gpio_i[3] gpio_en_o[3] gpio_o[3]
 PIN_GROUP += gpio_i[2] gpio_en_o[2] gpio_o[2]
 PIN_GROUP += gpio_i[1] gpio_en_o[1] gpio_o[1]
 PIN_GROUP += gpio_i[0] gpio_en_o[0] gpio_o[0]
-# export PLACE_PINS_ARGS = -min_distance 20.0 -corner_avoidance 20.0 -group_pins { $(PIN_GROUP) }
 
-export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_3v60.lib.gz) \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__ff_n40C_3v60.lib 
+export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
+			*_20 *dlyc_2 *oai222_2 *inv_8 \
+			*dffq_4 *addh_4 \
+			*aoi*_4 \
+			*clkinv_16 *nand*_4 *mux*_4 \
+			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
+			*clkinv_3 *and*_4 *inv_4 \
+			*addf* *mux2_1 *or*_4 \
+			*clkbuf_3 *buf_16 *clkinv_12
+
+# export DONT_USE_SC_LIB        = $(OBJECTS_DIR)/lib/merged.lib
+export ADDER_MAP_FILE =
+export PLACE_PINS_ARGS = -min_distance 20.0 -corner_avoidance 20.0 
+
+export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_5v50.lib.gz) \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__ff_n40C_5v50.lib \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__ff_n40C_5v50.lib 
 export FAST_TEMPERATURE = -40c
-export FAST_VOLTAGE     = 3.6
+export FAST_VOLTAGE     = 5.5
 
-export SLOW_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ss_125C_3v00.lib.gz) \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__ss_125C_3v00.lib \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__ss_125C_3v00.lib
+export SLOW_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ss_125C_4v50.lib.gz) \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__ss_125C_4v50.lib \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__ss_125C_4v50.lib
 
 export SLOW_TEMPERATURE = 125c
-export SLOW_VOLTAGE     = 3.0
+export SLOW_VOLTAGE     = 4.5
 
-export TYP_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__tt_025C_3v30.lib.gz) \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib \
-			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__tt_025C_3v30.lib
+export TYP_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__tt_025C_5v00.lib.gz) \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__tt_025C_5v00.lib \
+			$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__tt_025C_5v00.lib
 
 export TYP_TEMPERATURE = 25c
-export TYP_VOLTAGE     = 3.3
+export TYP_VOLTAGE     = 5.0
 
 export PDK_PATH = $(PDK_ROOT)/$(PDK)
 export ADDITIONAL_LEFS = $(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lef/gf180mcu_fd_ip_sram__sram256x8m8wm1.lef \
@@ -71,7 +84,7 @@ export MACRO_PLACEMENT_TCL = $(DESIGN_NAME)/macro_placement.tcl
 
 export CORE_MARGIN       = 1
 
-export PLACE_DENSITY = 0.6
+export PLACE_DENSITY = 0.50
 export MACRO_PLACE_HALO = 10 10
 
 export CORNERS = slow typ fast

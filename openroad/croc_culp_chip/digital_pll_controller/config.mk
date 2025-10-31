@@ -12,32 +12,30 @@ export KVALUE          = 9
 
 export PLATFORM        = gf180
 
+export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
+			*_20 *dlyc_2 *oai222_2 *inv_8 \
+			*dffq_4 *addh_4 \
+			*aoi*_4 \
+			*clkinv_16 *nand*_4 *mux*_4 \
+			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
+			*clkinv_3 *and*_4 *inv_4 \
+			*addf* *mux2_1 *or*_4 \
+			*clkbuf_3 *buf_16 *clkinv_12
+export ADDER_MAP_FILE =
 # export PLACE_PINS_ARGS = -min_distance 50.0 -corner_avoidance 50.0
 export PDK_PATH = $(PDK_ROOT)/$(PDK)
-export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_3v60.lib.gz)
+
+export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_5v50.lib.gz)
 export FAST_TEMPERATURE = -40c
-export FAST_VOLTAGE     = 3.6
+export FAST_VOLTAGE     = 5.5
 
-export SLOW_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ss_125C_3v00.lib.gz)
-
+export SLOW_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ss_125C_4v50.lib.gz)
 export SLOW_TEMPERATURE = 125c
-export SLOW_VOLTAGE     = 3.0
+export SLOW_VOLTAGE     = 4.5
 
-export TYP_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__tt_025C_3v30.lib.gz)
-
+export TYP_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__tt_025C_5v00.lib.gz)
 export TYP_TEMPERATURE = 25c
-export TYP_VOLTAGE     = 3.3
-
-
-export PDK_PATH = $(PDK_ROOT)/$(PDK)
-export ADDITIONAL_LEFS = $(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lef/gf180mcu_fd_ip_sram__sram256x8m8wm1.lef \
-	$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lef/gf180mcu_fd_ip_sram__sram512x8m8wm1.lef
-
-export ADDITIONAL_LIBS = $(PDK_PATH)/libs.ref/gf180mcu_fd_io/lib/gf180mcu_fd_io__tt_025C_3v30.lib \
-		$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram256x8m8wm1__tt_025C_5v00.lib \
-		$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/lib/gf180mcu_fd_ip_sram__sram512x8m8wm1__tt_025C_5v00.lib
-export ADDITIONAL_GDS = $(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/gds/gf180mcu_fd_ip_sram__sram256x8m8wm1.gds \
-		$(PDK_PATH)/libs.ref/gf180mcu_fd_ip_sram/gds/gf180mcu_fd_ip_sram__sram512x8m8wm1.gds
+export TYP_VOLTAGE     = 5.0
 
 export SDC_FILE        = $(DESIGN_NAME)/constraints.sdc
 

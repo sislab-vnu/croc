@@ -1,7 +1,7 @@
-set CLK_SYS 8
+set CLK_SYS 25
 create_clock -name clk_sys -period $CLK_SYS [get_ports clock]
 
-create_clock -name osc_clk -period 10 [get_ports osc]
+create_clock -name osc_clk -period 40 [get_ports osc]
 
 set_clock_groups -asynchronous -name clk_groups_async \
      -group {clk_sys} \
