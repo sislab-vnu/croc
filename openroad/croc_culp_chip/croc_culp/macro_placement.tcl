@@ -1,7 +1,7 @@
-place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[0\].depth_bank\[0\].genblk1.u_sram} -location {48.16 1379.84} -orientation MY
-place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[2\].depth_bank\[0\].genblk1.u_sram} -location {540.96 1379.84} -orientation R0
-place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[0\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[3\].depth_bank\[0\].genblk1.u_sram} -location {1655.92 1379.84} -orientation R0
-place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[3\].depth_bank\[0\].genblk1.u_sram} -location {1121.12 1379.84} -orientation R0
+place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[0\].depth_bank\[0\].genblk1.u_sram} -location {48.16 1371.84} -orientation MY
+place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[2\].depth_bank\[0\].genblk1.u_sram} -location {540.96 1371.84} -orientation R0
+place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[0\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[3\].depth_bank\[0\].genblk1.u_sram} -location {1655.92 1371.84} -orientation R0
+place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[1\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[3\].depth_bank\[0\].genblk1.u_sram} -location {1121.12 1371.84} -orientation R0
 
 ## cluster
 place_macro -macro_name {i_croc_soc.i_croc.gen_sram_bank\[0\].i_sram.gen_512x32xBx1.i_cut.byte_slice\[1\].depth_bank\[0\].genblk1.u_sram} -location {48.16 39.2} -orientation MX

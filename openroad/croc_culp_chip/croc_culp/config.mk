@@ -31,6 +31,14 @@ PIN_GROUP += gpio_i[2] gpio_en_o[2] gpio_o[2]
 PIN_GROUP += gpio_i[1] gpio_en_o[1] gpio_o[1]
 PIN_GROUP += gpio_i[0] gpio_en_o[0] gpio_o[0]
 
+## insert tap cell to get rid of LU.3 and LU.4 violation
+# export TIE_CELL                               = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__filltie
+export TIE_CELL    = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__filltie
+export ENDCAP_CELL = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
+export TAPCELL_TCL = tapcell.tcl
+export MACRO_ROWS_HALO_X = 14
+export MACRO_ROWS_HALO_Y = 14
+
 export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
 			*_20 *dlyc_2 *oai222_2 *inv_8 \
 			*dffq_4 *addh_4 \

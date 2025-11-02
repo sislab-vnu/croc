@@ -1,4 +1,4 @@
-# exclude_io_pin_region -region bottom:1116-2935 -region top:2300-2580 -region right:0-1054
+exclude_io_pin_region -region bottom:2000-2935 -region top:0-500 -region right:0-1054
 set_io_pin_constraint -pin_names { \
 				       uart_rx_i uart_tx_o fetch_en_i \
 				       status_o ref_clk_i rst_ni \

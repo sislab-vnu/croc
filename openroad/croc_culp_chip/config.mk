@@ -22,6 +22,13 @@ export SDC_FILE = constraint.sdc
 
 # export SEAL_GDS = $(DESIGN_HOME)/$(PLATFORM)/$(DESIGN_NICKNAME)/sealring.gds.gz
 
+## insert tap cell to get rid of LU.3 and LU.4 violation
+export TIE_CELL    = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
+export ENDCAP_CELL = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
+export TAPCELL_TCL = tapcell.tcl
+export MACRO_ROWS_HALO_X = 10
+export MACRO_ROWS_HALO_Y = 10
+
 export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
 			*_20 *dlyc_2 *oai222_2 *inv_8 \
 			*dffq_4 *addh_4 \

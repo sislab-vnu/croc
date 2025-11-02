@@ -12,6 +12,11 @@ export KVALUE          = 9
 
 export PLATFORM        = gf180
 
+## insert tap cell to get rid of LU.3 and LU.4 violation
+export TAPCELL_TCL ?= tapcell.tcl
+export MACRO_ROWS_HALO_X = 14
+export MACRO_ROWS_HALO_Y = 14
+
 export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
 			*_20 *dlyc_2 *oai222_2 *inv_8 \
 			*dffq_4 *addh_4 \
