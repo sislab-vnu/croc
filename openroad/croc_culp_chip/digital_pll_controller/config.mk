@@ -13,20 +13,23 @@ export KVALUE          = 9
 export PLATFORM        = gf180
 
 ## insert tap cell to get rid of LU.3 and LU.4 violation
-export TAPCELL_TCL ?= tapcell.tcl
-export MACRO_ROWS_HALO_X = 14
-export MACRO_ROWS_HALO_Y = 14
+export TAPCELL_TCL = tapcell.tcl
+export MACRO_ROWS_HALO_X = 10
+export MACRO_ROWS_HALO_Y = 10
 
-export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
-			*_20 *dlyc_2 *oai222_2 *inv_8 \
-			*dffq_4 *addh_4 \
-			*aoi*_4 \
-			*clkinv_16 *nand*_4 *mux*_4 \
-			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
-			*clkinv_3 *and*_4 *inv_4 \
-			*addf* *mux2_1 *or*_4 \
-			*clkbuf_3 *buf_16 *clkinv_12
-export ADDER_MAP_FILE =
+# export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
+# 			*_20 *dlyc_2 *oai222_2 *inv_8 \
+# 			*dffq_4 *addh_4 \
+# 			*aoi*_4 \
+# 			*clkinv_16 *nand*_4 *mux*_4 \
+# 			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
+# 			*clkinv_3 *and*_4 *inv_4 \
+# 			*addf* *mux2_1 *or*_4 \
+# 			*clkbuf_3 *buf_16 *clkinv_12
+export DONT_USE_CELLS = *_1
+export ADDER_MAP_FILE = tech/cells_adders.v
+export LATCH_MAP_FILE = tech/cells_latch.v
+
 # export PLACE_PINS_ARGS = -min_distance 50.0 -corner_avoidance 50.0
 export PDK_PATH = $(PDK_ROOT)/$(PDK)
 

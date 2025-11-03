@@ -36,21 +36,24 @@ PIN_GROUP += gpio_i[0] gpio_en_o[0] gpio_o[0]
 export TIE_CELL    = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__filltie
 export ENDCAP_CELL = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
 export TAPCELL_TCL = tapcell.tcl
-export MACRO_ROWS_HALO_X = 14
-export MACRO_ROWS_HALO_Y = 14
+export MACRO_ROWS_HALO_X = 10
+export MACRO_ROWS_HALO_Y = 10
 
-export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
-			*_20 *dlyc_2 *oai222_2 *inv_8 \
-			*dffq_4 *addh_4 \
-			*aoi*_4 \
-			*clkinv_16 *nand*_4 *mux*_4 \
-			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
-			*clkinv_3 *and*_4 *inv_4 \
-			*addf* *mux2_1 *or*_4 \
-			*clkbuf_3 *buf_16 *clkinv_12
+# export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
+# 			*_20 *dlyc_2 *oai222_2 *inv_8 \
+# 			*dffq_4 *addh_4 \
+# 			*aoi*_4 \
+# 			*clkinv_16 *nand*_4 *mux*_4 \
+# 			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
+# 			*clkinv_3 *and*_4 *inv_4 \
+# 			*addf* *mux2_1 *or*_4 \
+# 			*clkbuf_3 *buf_16 *clkinv_12
 
 # export DONT_USE_SC_LIB        = $(OBJECTS_DIR)/lib/merged.lib
-export ADDER_MAP_FILE =
+export DONT_USE_CELLS = *_1
+export ADDER_MAP_FILE = tech/cells_adders.v
+export LATCH_MAP_FILE = tech/cells_latch.v
+
 export PLACE_PINS_ARGS = -min_distance 20.0 -corner_avoidance 20.0 
 
 export FAST_LIB_FILES = $(abspath $(PLATFORM_DIR)/lib/gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__ff_n40C_5v50.lib.gz) \

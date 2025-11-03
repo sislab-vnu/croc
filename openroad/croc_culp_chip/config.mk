@@ -23,22 +23,25 @@ export SDC_FILE = constraint.sdc
 # export SEAL_GDS = $(DESIGN_HOME)/$(PLATFORM)/$(DESIGN_NICKNAME)/sealring.gds.gz
 
 ## insert tap cell to get rid of LU.3 and LU.4 violation
-export TIE_CELL    = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
+export TIE_CELL    = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__filltie
 export ENDCAP_CELL = gf180mcu_fd_sc_mcu$(TRACK_OPTION)$(POWER_OPTION)__endcap
 export TAPCELL_TCL = tapcell.tcl
 export MACRO_ROWS_HALO_X = 10
 export MACRO_ROWS_HALO_Y = 10
 
-export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
-			*_20 *dlyc_2 *oai222_2 *inv_8 \
-			*dffq_4 *addh_4 \
-			*aoi*_4 \
-			*clkinv_16 *addf_1 *nand*_4 *mux*_4 \
-			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
-			*clkinv_3 *and*_4 *inv_4 \
-			*addf_2 *mux2_1 *or*_4 \
-			*clkbuf_3 *buf_16 *clkinv_12
+# export DONT_USE_CELLS = *_1 *oai33_2 *dlyd_2 *buf_2 \
+# 			*_20 *dlyc_2 *oai222_2 *inv_8 \
+# 			*dffq_4 *addh_4 \
+# 			*aoi*_4 \
+# 			*clkinv_16 *addf_1 *nand*_4 *mux*_4 \
+# 			*nand4_2 *clkbuf_8 *dffrnq_4 *oai*_4 \
+# 			*clkinv_3 *and*_4 *inv_4 \
+# 			*addf_2 *mux2_1 *or*_4 \
+# 			*clkbuf_3 *buf_16 *clkinv_12
 
+export DONT_USE_CELLS = *_1
+export ADDER_MAP_FILE = tech/cells_adders.v
+export LATCH_MAP_FILE = tech/cells_latch.v
 
 export DIE_AREA = 0.0 0.0 2934.96 2932.16
 export CORE_AREA = 371.84 372.4 2562.56 2559.76
